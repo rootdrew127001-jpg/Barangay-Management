@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barangay Management System Dashboard</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="sidebar-header">
+        <div class="logo-circle">
+          <i class="fa-solid fa-building"></i>
+        </div>
+        <div>
+          <h2>BMS</h2>
+          <span>Management</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-table-columns"></i>
+          Dashboard
+        </a>
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-users"></i>
+          Resident
+        </a>
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-file-circle-check"></i>
+          Certificate
+        </a>
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-scale-balanced"></i>
+          Blotter
+        </a>
+
+        <!-- ACTIVE DROPDOWN -->
+        <div class="nav-dropdown">
+
+          <div class="nav-item active-parent">
+            <div class="nav-left">
+              <i class="fa-solid fa-wallet"></i>
+              Financial
+            </div>
+
+            <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+          </div>
+
+          <div class="dropdown-menu">
+
+            <a href="#" class="dropdown-item active">
+              Dashboard
+            </a>
+
+            <a href="#" class="dropdown-item">
+              Resident Management
+            </a>
+
+            <a href="#" class="dropdown-item">
+              Financial Management
+            </a>
+
+            <a href="#" class="dropdown-item">
+              Reports
+            </a>
+
+            <a href="#" class="dropdown-item">
+              Documents
+            </a>
+
+            <a href="#" class="dropdown-item">
+              User Management
+            </a>
+
+          </div>
+        </div>
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-bullhorn"></i>
+          Announcement
+        </a>
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-user"></i>
+          Account
+        </a>
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-gear"></i>
+          Settings
+        </a>
+
+        <a href="#" class="nav-item logout">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Logout
+        </a>
+
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+
+        <div class="topbar-left">
+          <div class="brand-logo">
+            <i class="fa-solid fa-landmark"></i>
+          </div>
+
+          <div>
+            <h1>BARANGAY MANAGEMENT SYSTEM</h1>
+            <p>Barangay Sta. Ana, Pateros</p>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+
+          <div class="breadcrumb">
+            Financial / Dashboard
+          </div>
+
+          <button class="icon-btn">
+            <i class="fa-regular fa-bell"></i>
+          </button>
+
+          <button class="icon-btn profile-btn">
+            <i class="fa-regular fa-user"></i>
+          </button>
+
+        </div>
+
+      </header>
+
+<!-- METRIC CARDS -->
+<section class="metrics-grid">
+
+  <!-- TOTAL REVENUE -->
+  <div class="metric-card green">
+    <div class="metric-icon">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+    </div>
+
+    <div class="metric-content">
+      <span>Total Revenue</span>
+      <h2>₱120,000.00</h2>
+
+      <a href="revenue-details.html" class="details-link green-link">
+        View Details <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- TOTAL EXPENSES -->
+  <div class="metric-card red">
+    <div class="metric-icon">
+      <i class="fa-solid fa-arrow-trend-down"></i>
+    </div>
+
+    <div class="metric-content">
+      <span>Total Expenses</span>
+      <h2>₱80,000.00</h2>
+
+      <a href="expenses-details.html" class="details-link red-link">
+        View Details <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- NET BALANCE -->
+  <div class="metric-card blue">
+    <div class="metric-icon">
+      <i class="fa-solid fa-wallet"></i>
+    </div>
+
+    <div class="metric-content">
+      <span>Net Balance</span>
+      <h2>₱40,000.00</h2>
+
+      <a href="NetBalance.html" class="details-link blue-link">
+        View Details <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+
+</section>
+
+      <!-- CHART SECTION -->
+      <section class="content-grid">
+
+        <!-- BAR CHART -->
+        <div class="card chart-card">
+
+<div class="card-header chart-header">
+  <h3>Summary of Income & Expenditures</h3>
+
+  <a href="SummaryIncome.html" class="details-link chart-link">
+    View Details <i class="fa-solid fa-arrow-right"></i>
+  </a>
+</div>
+
+          <div class="bar-chart">
+
+            <div class="bars">
+
+              <div class="bar-group">
+                <div class="bar income" style="height: 140px;"></div>
+                <div class="bar expense" style="height: 90px;"></div>
+                <span>Jan</span>
+              </div>
+
+              <div class="bar-group">
+                <div class="bar income" style="height: 160px;"></div>
+                <div class="bar expense" style="height: 100px;"></div>
+                <span>Feb</span>
+              </div>
+
+              <div class="bar-group">
+                <div class="bar income" style="height: 120px;"></div>
+                <div class="bar expense" style="height: 80px;"></div>
+                <span>Mar</span>
+              </div>
+
+              <div class="bar-group">
+                <div class="bar income" style="height: 180px;"></div>
+                <div class="bar expense" style="height: 120px;"></div>
+                <span>Apr</span>
+              </div>
+
+              <div class="bar-group">
+                <div class="bar income" style="height: 150px;"></div>
+                <div class="bar expense" style="height: 95px;"></div>
+                <span>May</span>
+              </div>
+
+            </div>
+
+            <div class="chart-legend">
+              <div class="legend-item">
+                <span class="legend-color green-bg"></span>
+                Income
+              </div>
+
+              <div class="legend-item">
+                <span class="legend-color red-bg"></span>
+                Expenditure
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+<!-- IRA UTILIZATION -->
+<div class="card utilization-card">
+
+  <div class="card-header chart-header">
+
+    <h3>20% IRA Utilization</h3>
+
+    <a href="IRAUtilization.html" class="details-link chart-link">
+      View All <i class="fa-solid fa-arrow-right"></i>
+    </a>
+
+  </div>
+
+  <div class="utilization-content">
+
+    <div class="progress-wrapper">
+
+      <div class="progress-ring">
+        <div class="progress-value">
+          72%
+        </div>
+      </div>
+
+    </div>
+
+    <div class="utilization-breakdown">
+
+      <div class="breakdown-item">
+        <span>Infrastructure</span>
+        <strong>40%</strong>
+      </div>
+
+      <div class="breakdown-item">
+        <span>Health</span>
+        <strong>20%</strong>
+      </div>
+
+      <div class="breakdown-item">
+        <span>Education</span>
+        <strong>12%</strong>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+      </section>
+
+      <!-- BOTTOM SECTION -->
+      <section class="bottom-grid">
+
+<!-- TABLE -->
+<div class="card table-card">
+
+  <div class="card-header chart-header">
+
+    <h3>Recent Transactions</h3>
+
+    <a href="RecentTransactions.html" class="details-link chart-link">
+      View All <i class="fa-solid fa-arrow-right"></i>
+    </a>
+
+  </div>
+
+  <div class="table-wrapper">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td>05/10/2026</td>
+          <td>Community Tax Collection</td>
+          <td>Revenue</td>
+          <td>₱25,000</td>
+          <td>
+            <span class="badge revenue">
+              Revenue
+            </span>
+          </td>
+        </tr>
+
+        <tr>
+          <td>05/11/2026</td>
+          <td>Road Maintenance</td>
+          <td>Expense</td>
+          <td>₱15,000</td>
+          <td>
+            <span class="badge expense">
+              Expense
+            </span>
+          </td>
+        </tr>
+
+        <tr>
+          <td>05/12/2026</td>
+          <td>Barangay Permit Fees</td>
+          <td>Revenue</td>
+          <td>₱12,000</td>
+          <td>
+            <span class="badge revenue">
+              Revenue
+            </span>
+          </td>
+        </tr>
+
+        <tr>
+          <td>05/13/2026</td>
+          <td>Medical Assistance</td>
+          <td>Expense</td>
+          <td>₱8,500</td>
+          <td>
+            <span class="badge expense">
+              Expense
+            </span>
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+<!-- COLLECTIONS CARD -->
+<div class="card summary-card">
+
+  <div class="card-header chart-header">
+
+    <h3>Monthly Collections & Disbursements</h3>
+
+    <a href="MonthlyCollections.html" class="details-link chart-link">
+      View All <i class="fa-solid fa-arrow-right"></i>
+    </a>
+
+  </div>
+
+  <div class="mini-summary-grid">
+
+    <div class="mini-card green-soft">
+      <span>Collections</span>
+      <h2>₱65,000</h2>
+    </div>
+
+    <div class="mini-card red-soft">
+      <span>Disbursements</span>
+      <h2>₱42,000</h2>
+    </div>
+
+  </div>
+
+  <div class="summary-list">
+
+    <div class="summary-item">
+      <span>Business Permits</span>
+      <strong>₱18,000</strong>
+    </div>
+
+    <div class="summary-item">
+      <span>Barangay Clearance</span>
+      <strong>₱12,000</strong>
+    </div>
+
+    <div class="summary-item">
+      <span>Infrastructure Expense</span>
+      <strong>₱20,000</strong>
+    </div>
+
+    <div class="summary-item">
+      <span>Health Program</span>
+      <strong>₱9,000</strong>
+    </div>
+
+  </div>
+
+</div>
+      </section>
+
+    </main>
+
+  </div>
+
+</body>
+</html>
