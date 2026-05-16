@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Summary Income Report</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-circle">
+          <i class="fa-solid fa-building"></i>
+        </div>
+        <div>
+          <h2>BMS</h2>
+          <span>Management</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#" class="nav-item"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-users"></i> Resident</a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-file-circle-check"></i> Certificate</a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-scale-balanced"></i> Blotter</a>
+
+        <div class="nav-dropdown">
+          <div class="nav-item active-parent">
+            <div class="nav-left">
+              <i class="fa-solid fa-wallet"></i>
+              Financial
+            </div>
+            <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+          </div>
+
+          <div class="dropdown-menu">
+            <a href="financialhome.html" class="dropdown-item">Dashboard</a>
+            <a href="ResidentManagement.html" class="dropdown-item">Resident Management</a>
+            <a href="FinancialManagementRevenue.html" class="dropdown-item">Financial Management</a>
+            <a href="Reports.html" class="dropdown-item active">Reports</a>
+            <a href="Documents.html" class="dropdown-item">Documents</a>
+            <a href="UserManagement.html" class="dropdown-item">User Management</a>
+          </div>
+        </div>
+
+        <a href="#" class="nav-item"><i class="fa-solid fa-bullhorn"></i> Announcement</a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-user"></i> Account</a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+        <a href="#" class="nav-item logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="brand-logo">
+            <i class="fa-solid fa-landmark"></i>
+          </div>
+          <div>
+            <h1>BARANGAY MANAGEMENT SYSTEM</h1>
+            <p>Barangay Sta. Ana, Pateros</p>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="breadcrumb">Financial / Reports</div>
+
+          <button class="icon-btn">
+            <i class="fa-regular fa-bell"></i>
+          </button>
+
+          <button class="icon-btn profile-btn">
+            <i class="fa-regular fa-user"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- CARD -->
+      <section class="card financial-overview">
+
+        <div class="overview-header">
+          <h3>Financial Reports</h3>
+          <p>Monthly Income Summary Report</p>
+        </div>
+
+        <!-- FILTER -->
+        <div class="filter-section">
+
+          <div class="filter-group">
+            <label>Report Type</label>
+            <select class="month-select">
+              <option>Monthly Financial Report</option>
+              <option>Quarterly Report</option>
+              <option>Annual Report</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Month</label>
+            <select class="month-select small">
+              <option>May 2026</option>
+              <option>April 2026</option>
+              <option>March 2026</option>
+            </select>
+          </div>
+
+          <button class="generate-btn">Generate Report</button>
+
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="summary-wrapper">
+          <div class="summary-box">
+
+            <div class="summary-row">
+              <span>Total Revenue</span>
+              <strong>₱248,600.00</strong>
+            </div>
+
+            <div class="summary-row">
+              <span>Total Expenses</span>
+              <strong>₱214,330.00</strong>
+            </div>
+
+            <div class="summary-row last">
+              <span>Net Collection</span>
+              <strong class="positive">₱34,250.00</strong>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- DOWNLOAD -->
+        <div class="download-wrapper">
+          <button class="download-btn">
+            <i class="fa-solid fa-download"></i>
+            View / Download Report
+          </button>
+        </div>
+
+      </section>
+
+      <footer class="footer">
+        © 2026 Barangay Financial and Revenue
+      </footer>
+
+    </main>
+  </div>
+
+</body>
+</html>

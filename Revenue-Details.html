@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revenue Details</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <div class="logo-circle">
+        <i class="fa-solid fa-building"></i>
+      </div>
+
+      <div>
+        <h2>BMS</h2>
+        <span>Management</span>
+      </div>
+    </div>
+
+    <nav class="nav-menu">
+
+      <a href="index.html" class="nav-item">
+        <i class="fa-solid fa-table-columns"></i>
+        Dashboard
+      </a>
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-users"></i>
+        Resident
+      </a>
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-file-circle-check"></i>
+        Certificate
+      </a>
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-scale-balanced"></i>
+        Blotter
+      </a>
+
+      <!-- FINANCIAL DROPDOWN -->
+      <div class="nav-dropdown">
+
+        <div class="nav-item active-parent">
+          <div class="nav-left">
+            <i class="fa-solid fa-wallet"></i>
+            Financial
+          </div>
+          <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+        </div>
+
+        <div class="dropdown-menu">
+
+          <!-- ACTIVE = DASHBOARD -->
+          <a href="financialhome.html" class="dropdown-item active">
+            Dashboard
+          </a>
+
+          <a href="resident-management.html" class="dropdown-item">
+            Resident Management
+          </a>
+
+          <a href="financial-management.html" class="dropdown-item">
+            Financial Management
+          </a>
+
+          <a href="reports.html" class="dropdown-item">
+            Reports
+          </a>
+
+          <a href="documents.html" class="dropdown-item">
+            Documents
+          </a>
+
+          <a href="user-management.html" class="dropdown-item">
+            User Management
+          </a>
+
+        </div>
+      </div>
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-bullhorn"></i>
+        Announcement
+      </a>
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-user"></i>
+        Account
+      </a>
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-gear"></i>
+        Settings
+      </a>
+
+      <a href="#" class="nav-item logout">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+      </a>
+
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+
+      <div class="topbar-left">
+        <div class="brand-logo">
+          <i class="fa-solid fa-landmark"></i>
+        </div>
+
+        <div>
+          <h1>BARANGAY MANAGEMENT SYSTEM</h1>
+          <p>Barangay Sta. Ana, Pateros</p>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+
+        <div class="breadcrumb">
+          Financial / Revenue Details
+        </div>
+
+        <button class="icon-btn">
+          <i class="fa-regular fa-bell"></i>
+        </button>
+
+        <button class="icon-btn profile-btn">
+          <i class="fa-regular fa-user"></i>
+        </button>
+
+      </div>
+
+    </header>
+
+    <!-- CONTENT -->
+    <section class="card">
+
+      <div class="card-header">
+        <div>
+          <h3>Revenue Overview</h3>
+          <p>Detailed breakdown of all revenue collected</p>
+        </div>
+
+        <select class="month-select">
+          <option>This Month</option>
+          <option>Last Month</option>
+          <option>This Year</option>
+        </select>
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="revenue-summary">
+
+        <div class="summary-left">
+
+          <div class="summary-icon">
+            <i class="fa-solid fa-sack-dollar"></i>
+          </div>
+
+          <div class="summary-text">
+            <span>Total Revenue</span>
+            <h1>₱120,000.00</h1>
+          </div>
+
+        </div>
+
+        <div class="growth">
+          +8.5%
+        </div>
+
+      </div>
+
+      <!-- CHART -->
+      <h3 class="section-title">Monthly Revenue</h3>
+
+      <div class="chart">
+
+        <div class="chart-row">
+          <span>Jan</span>
+          <div class="bar-container"><div class="bar" style="width: 20%;"></div></div>
+        </div>
+
+        <div class="chart-row">
+          <span>Feb</span>
+          <div class="bar-container"><div class="bar" style="width: 45%;"></div></div>
+        </div>
+
+        <div class="chart-row">
+          <span>Mar</span>
+          <div class="bar-container"><div class="bar" style="width: 70%;"></div></div>
+        </div>
+
+        <div class="chart-row">
+          <span>Apr</span>
+          <div class="bar-container"><div class="bar" style="width: 85%;"></div></div>
+        </div>
+
+        <div class="chart-row">
+          <span>May</span>
+          <div class="bar-container"><div class="bar" style="width: 55%;"></div></div>
+        </div>
+
+      </div>
+
+      <!-- TABLE -->
+      <h3 class="section-title">Revenue Records</h3>
+
+      <div class="table-wrapper">
+
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>05/10/2026</td>
+              <td>Community Tax Collection</td>
+              <td class="amount">₱25,000</td>
+            </tr>
+
+            <tr>
+              <td>05/11/2026</td>
+              <td>Barangay Permit Fees</td>
+              <td class="amount">₱12,000</td>
+            </tr>
+
+            <tr>
+              <td>05/12/2026</td>
+              <td>Business Permit Collection</td>
+              <td class="amount">₱18,000</td>
+            </tr>
+
+            <tr>
+              <td>05/13/2026</td>
+              <td>Market Clearance Fees</td>
+              <td class="amount">₱9,500</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <button class="add-btn">
+        + Add Revenue
+      </button>
+
+    </section>
+      </section>
+
+      <!-- FOOTER -->
+      <footer style="
+        margin-top: 16px;
+        text-align: center;
+        padding: 18px;
+        font-size: 13px;
+        color: var(--text-light);
+      ">
+        © 2026 Barangay Financial and Revenue
+      </footer>
+  </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Summary of Income & Expenditures</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <!-- MAIN CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="sidebar-header">
+
+        <div class="logo-circle">
+          <i class="fa-solid fa-building"></i>
+        </div>
+
+        <div>
+          <h2>BMS</h2>
+          <span>Management</span>
+        </div>
+
+      </div>
+
+      <nav class="nav-menu">
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-table-columns"></i>
+          Dashboard
+        </a>
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-users"></i>
+          Resident
+        </a>
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-file-circle-check"></i>
+          Certificate
+        </a>
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-scale-balanced"></i>
+          Blotter
+        </a>
+
+        <!-- ACTIVE DROPDOWN -->
+        <div class="nav-dropdown">
+
+          <div class="nav-item active-parent">
+
+            <div class="nav-left">
+              <i class="fa-solid fa-wallet"></i>
+              Financial
+            </div>
+
+            <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+
+          </div>
+
+          <div class="dropdown-menu">
+
+            <a href="financialhome.html" class="dropdown-item active">
+              Dashboard
+            </a>
+
+            <a href="summary_income.html" class="dropdown-item">
+              Resident Management
+            </a>
+
+            <a href="#" class="dropdown-item">
+              Financial Management
+            </a>
+
+            <a href="#" class="dropdown-item">
+              Reports
+            </a>
+
+            <a href="#" class="dropdown-item">
+              Documents
+            </a>
+
+            <a href="#" class="dropdown-item">
+              User Management
+            </a>
+
+          </div>
+
+        </div>
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-bullhorn"></i>
+          Announcement
+        </a>
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-user"></i>
+          Account
+        </a>
+
+        <a href="#" class="nav-item">
+          <i class="fa-solid fa-gear"></i>
+          Settings
+        </a>
+
+        <a href="#" class="nav-item logout">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Logout
+        </a>
+
+      </nav>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+
+        <div class="topbar-left">
+
+          <div class="brand-logo">
+            <i class="fa-solid fa-landmark"></i>
+          </div>
+
+          <div>
+            <h1>BARANGAY MANAGEMENT SYSTEM</h1>
+            <p>Barangay Sta. Ana, Pateros</p>
+          </div>
+
+        </div>
+
+        <div class="topbar-right">
+
+          <div class="breadcrumb">
+            Financial / Summary Income
+          </div>
+
+          <button class="icon-btn">
+            <i class="fa-regular fa-bell"></i>
+          </button>
+
+          <button class="icon-btn profile-btn">
+            <i class="fa-regular fa-user"></i>
+          </button>
+
+        </div>
+
+      </header>
+
+      <!-- FINANCIAL OVERVIEW -->
+      <section class="card financial-overview">
+
+        <!-- HEADER -->
+        <div class="overview-header">
+
+          <h3>Summary of Income & Expenditures</h3>
+
+          <p>
+            Compare monthly revenue and expenses
+          </p>
+
+        </div>
+
+        <!-- CHART -->
+        <div class="chart-card">
+
+          <div class="bar-chart">
+
+            <div class="bars">
+
+              <div class="bar-group">
+                <div class="bar income" style="height:140px;"></div>
+                <div class="bar expense" style="height:90px;"></div>
+                <span>Jan</span>
+              </div>
+
+              <div class="bar-group">
+                <div class="bar income" style="height:145px;"></div>
+                <div class="bar expense" style="height:105px;"></div>
+                <span>Feb</span>
+              </div>
+
+              <div class="bar-group">
+                <div class="bar income" style="height:220px;"></div>
+                <div class="bar expense" style="height:150px;"></div>
+                <span>Mar</span>
+              </div>
+
+              <div class="bar-group">
+                <div class="bar income" style="height:205px;"></div>
+                <div class="bar expense" style="height:155px;"></div>
+                <span>Apr</span>
+              </div>
+
+              <div class="bar-group">
+                <div class="bar income" style="height:170px;"></div>
+                <div class="bar expense" style="height:155px;"></div>
+                <span>May</span>
+              </div>
+
+              <div class="bar-group">
+                <div class="bar income" style="height:168px;"></div>
+                <div class="bar expense" style="height:160px;"></div>
+                <span>Jun</span>
+              </div>
+
+              <div class="bar-group">
+                <div class="bar income" style="height:135px;"></div>
+                <div class="bar expense" style="height:145px;"></div>
+                <span>Jul</span>
+              </div>
+
+              <div class="bar-group">
+                <div class="bar income" style="height:60px;"></div>
+                <div class="bar expense" style="height:70px;"></div>
+                <span>Aug</span>
+              </div>
+
+              <div class="bar-group">
+                <div class="bar income" style="height:40px;"></div>
+                <div class="bar expense" style="height:35px;"></div>
+                <span>Dec</span>
+              </div>
+
+            </div>
+
+            <!-- LEGEND -->
+            <div class="financial-legend">
+
+              <div class="legend-item">
+                <span class="legend-color green-bg"></span>
+                Revenue
+              </div>
+
+              <div class="legend-item">
+                <span class="legend-color red-bg"></span>
+                Expenses
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="summary-section">
+
+          <h3 class="section-title">
+            Summary
+          </h3>
+
+          <div class="summary-list">
+
+            <div class="summary-item">
+
+              <div class="summary-left-item">
+
+                <span class="legend-color green-bg"></span>
+
+                <span>Total Income</span>
+
+              </div>
+
+              <strong class="income-text">
+                ₱120,000.00
+              </strong>
+
+            </div>
+
+            <div class="summary-item">
+
+              <div class="summary-left-item">
+
+                <span class="legend-color red-bg"></span>
+
+                <span>Total Expenses</span>
+
+              </div>
+
+              <strong class="expense-text">
+                ₱80,000.00
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- NET INCOME -->
+        <div class="net-balance-box">
+
+          <span>
+            <i class="fa-solid fa-circle-info"></i>
+            Net Income
+          </span>
+
+          <h1>₱40,000.00</h1>
+
+        </div>
+
+        <!-- EXPORT BUTTON -->
+        <button class="download-btn">
+
+          <i class="fa-solid fa-download"></i>
+
+          Export Report
+
+        </button>
+
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="footer">
+
+        © 2026 Barangay Financial and Revenue
+
+      </footer>
+
+    </main>
+
+  </div>
+
+</body>
+</html>

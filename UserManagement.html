@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Management</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-circle">
+        <i class="fa-solid fa-building"></i>
+      </div>
+      <div>
+        <h2>BMS</h2>
+        <span>Management</span>
+      </div>
+    </div>
+
+    <nav class="nav-menu">
+      <a href="#" class="nav-item"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-users"></i> Resident</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-file-circle-check"></i> Certificate</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-scale-balanced"></i> Blotter</a>
+
+      <div class="nav-dropdown">
+        <div class="nav-item active-parent">
+          <div class="nav-left">
+            <i class="fa-solid fa-wallet"></i>
+            Financial
+          </div>
+          <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+        </div>
+
+        <div class="dropdown-menu">
+          <a href="financialhome.html" class="dropdown-item">Dashboard</a>
+          <a href="ResidentManagement.html" class="dropdown-item">Resident Management</a>
+          <a href="FinancialManagementRevenue.html" class="dropdown-item">Financial Management</a>
+          <a href="Reports.html" class="dropdown-item">Reports</a>
+          <a href="Documents.html" class="dropdown-item">Documents</a>
+          <a href="UserManagement.html" class="dropdown-item active">User Management</a>
+        </div>
+      </div>
+
+      <a href="#" class="nav-item"><i class="fa-solid fa-bullhorn"></i> Announcement</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-user"></i> Account</a>
+      <a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+      <a href="#" class="nav-item logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="brand-logo">
+          <i class="fa-solid fa-landmark"></i>
+        </div>
+        <div>
+          <h1>BARANGAY MANAGEMENT SYSTEM</h1>
+          <p>Barangay Sta. Ana, Pateros</p>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="breadcrumb">Financial / User Management</div>
+
+        <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+        <button class="icon-btn profile-btn"><i class="fa-regular fa-user"></i></button>
+      </div>
+    </header>
+
+    <!-- CARD -->
+    <section class="card">
+
+      <div class="card-header user-header">
+        <h3>Users</h3>
+        <button class="add-user-btn">
+          <i class="fa-solid fa-plus"></i>
+          Add User
+        </button>
+      </div>
+
+      <!-- SEARCH -->
+      <div class="search-wrapper">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" class="search-input" placeholder="Search user....." />
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-wrapper">
+        <table>
+
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr>
+              <td>USR-001</td>
+              <td>Admin User</td>
+              <td>Admin</td>
+              <td>Admin</td>
+              <td><span class="status success">Active</span></td>
+              <td>
+                <div class="action-icons">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                  <i class="fa-solid fa-trash"></i>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>USR-002</td>
+              <td>Treasurer User</td>
+              <td>Treasurer</td>
+              <td>Treasurer</td>
+              <td><span class="status success">Active</span></td>
+              <td>
+                <div class="action-icons">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                  <i class="fa-solid fa-trash"></i>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>USR-003</td>
+              <td>Treasurer User</td>
+              <td>Treasurer</td>
+              <td>Treasurer</td>
+              <td><span class="status success">Active</span></td>
+              <td>
+                <div class="action-icons">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                  <i class="fa-solid fa-trash"></i>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>USR-004</td>
+              <td>Admin User</td>
+              <td>Admin</td>
+              <td>Admin</td>
+              <td><span class="status danger">Inactive</span></td>
+              <td>
+                <div class="action-icons">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                  <i class="fa-solid fa-trash"></i>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="table-footer">
+
+        <p class="table-info">Showing 1 to 4 of 4 entries</p>
+
+        <div class="pagination">
+
+          <button class="page-btn icon"><i class="fa-solid fa-chevron-left"></i></button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">4</button>
+          <button class="page-btn icon"><i class="fa-solid fa-chevron-right"></i></button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <footer class="footer">
+      © 2026 Barangay Financial and Revenue
+    </footer>
+
+  </main>
+
+</div>
+
+</body>
+</html>

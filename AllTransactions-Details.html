@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Summary Income</title>
+
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<!-- MAIN CSS -->
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div class="sidebar-header">
+
+<div class="logo-circle">
+<i class="fa-solid fa-building"></i>
+</div>
+
+<div>
+<h2>BMS</h2>
+<span>Management</span>
+</div>
+
+</div>
+
+<nav class="nav-menu">
+
+<a href="#" class="nav-item">
+<i class="fa-solid fa-table-columns"></i>
+Dashboard
+</a>
+
+<a href="#" class="nav-item">
+<i class="fa-solid fa-users"></i>
+Resident
+</a>
+
+<a href="#" class="nav-item">
+<i class="fa-solid fa-file-circle-check"></i>
+Certificate
+</a>
+
+<a href="#" class="nav-item">
+<i class="fa-solid fa-scale-balanced"></i>
+Blotter
+</a>
+
+<!-- DROPDOWN -->
+<div class="nav-dropdown">
+
+<div class="nav-item active-parent">
+
+<div class="nav-left">
+<i class="fa-solid fa-wallet"></i>
+Financial
+</div>
+
+<i class="fa-solid fa-chevron-down dropdown-icon"></i>
+
+</div>
+
+<div class="dropdown-menu">
+
+<a href="financialhome.html" class="dropdown-item active">
+Dashboard
+</a>
+
+<a href="summary_income.html" class="dropdown-item">
+Resident Management
+</a>
+
+<a href="#" class="dropdown-item">
+Reports
+</a>
+
+<a href="#" class="dropdown-item">
+Documents
+</a>
+
+<a href="#" class="dropdown-item">
+User Management
+</a>
+
+</div>
+
+</div>
+
+<a href="#" class="nav-item">
+<i class="fa-solid fa-bullhorn"></i>
+Announcement
+</a>
+
+<a href="#" class="nav-item">
+<i class="fa-solid fa-user"></i>
+Account
+</a>
+
+<a href="#" class="nav-item">
+<i class="fa-solid fa-gear"></i>
+Settings
+</a>
+
+<a href="#" class="nav-item logout">
+<i class="fa-solid fa-right-from-bracket"></i>
+Logout
+</a>
+
+</nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+<!-- TOPBAR -->
+<header class="topbar">
+
+<div class="topbar-left">
+
+<div class="brand-logo">
+<i class="fa-solid fa-landmark"></i>
+</div>
+
+<div>
+<h1>BARANGAY MANAGEMENT SYSTEM</h1>
+<p>Barangay Sta. Ana, Pateros</p>
+</div>
+
+</div>
+
+<div class="topbar-right">
+
+<div class="breadcrumb">
+Financial / Summary Income
+</div>
+
+<button class="icon-btn">
+<i class="fa-regular fa-bell"></i>
+</button>
+
+<button class="icon-btn profile-btn">
+<i class="fa-regular fa-user"></i>
+</button>
+
+</div>
+
+</header>
+
+<!-- SUMMARY CONTENT -->
+<section class="card financial-overview">
+
+<!-- HEADER -->
+<div class="overview-header">
+
+<h3>All Transactions</h3>
+
+<p>
+Latest revenue and expenses records
+</p>
+
+</div>
+
+<!-- SEARCH SECTION -->
+<div class="search-section">
+
+<!-- SEARCH BAR -->
+<div class="search-box">
+
+<i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+<input
+type="text"
+placeholder="Search..."
+class="search-input"
+/>
+
+</div>
+
+<!-- FILTER -->
+<select class="month-select">
+
+<option>All Types</option>
+<option>Revenue</option>
+<option>Expense</option>
+
+</select>
+
+</div>
+
+<!-- TABLE -->
+<div class="table-section">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>DATE</th>
+<th>DESCRIPTION</th>
+<th>TYPE</th>
+<th>AMOUNT</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Aug 25, 2025</td>
+
+<td>Community Tax Collection</td>
+
+<td>
+<span class="badge revenue">
+Revenue
+</span>
+</td>
+
+<td class="income-amount">
+₱15,000.00
+</td>
+
+</tr>
+
+<tr>
+
+<td>Aug 23, 2025</td>
+
+<td>Office Supplies Purchase</td>
+
+<td>
+<span class="badge expense">
+Expense
+</span>
+</td>
+
+<td class="expense-amount">
+₱8,500.00
+</td>
+
+</tr>
+
+<tr>
+
+<td>Aug 18, 2025</td>
+
+<td>Street Light Maintenance</td>
+
+<td>
+<span class="badge expense">
+Expense
+</span>
+</td>
+
+<td class="expense-amount">
+₱12,000.00
+</td>
+
+</tr>
+
+<tr>
+
+<td>Aug 15, 2025</td>
+
+<td>IRA Fund Release</td>
+
+<td>
+<span class="badge revenue">
+Revenue
+</span>
+</td>
+
+<td class="income-amount">
+₱50,000.00
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<!-- BUTTON -->
+<div class="transaction-btn-wrapper">
+
+<button class="download-btn">
+
+View All Transactions
+
+</button>
+
+</div>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+
+© 2026 Barangay Financial and Revenue
+
+</footer>
+
+</main>
+
+</div>
+
+</body>
+</html>

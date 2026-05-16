@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Summary Income | Barangay Management System</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <!-- MAIN CSS -->
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+
+      <div class="logo-circle">
+        <i class="fa-solid fa-building"></i>
+      </div>
+
+      <div>
+        <h2>BMS</h2>
+        <span>Management</span>
+      </div>
+
+    </div>
+
+    <nav class="nav-menu">
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-table-columns"></i>
+        Dashboard
+      </a>
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-users"></i>
+        Resident
+      </a>
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-file-circle-check"></i>
+        Certificate
+      </a>
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-scale-balanced"></i>
+        Blotter
+      </a>
+
+      <!-- FINANCIAL -->
+      <div class="nav-dropdown">
+
+        <div class="nav-item active-parent">
+
+          <div class="nav-left">
+            <i class="fa-solid fa-wallet"></i>
+            Financial
+          </div>
+
+          <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+
+        </div>
+
+        <div class="dropdown-menu">
+
+          <a href="financialhome.html" class="dropdown-item">
+            Dashboard
+          </a>
+
+          <a href="ResidentManagement.html" class="dropdown-item">
+            Resident Management
+          </a>
+
+          <a href="FinancialManagementRevenue.html" class="dropdown-item active">
+            Financial Management
+          </a>
+
+          <a href="Reports.html" class="dropdown-item">
+            Reports
+          </a>
+
+          <a href="Documents.html" class="dropdown-item">
+            Documents
+          </a>
+
+          <a href="UserManagement.html" class="dropdown-item">
+            User Management
+          </a>
+
+        </div>
+
+      </div>
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-bullhorn"></i>
+        Announcement
+      </a>
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-user"></i>
+        Account
+      </a>
+
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-gear"></i>
+        Settings
+      </a>
+
+      <a href="#" class="nav-item logout">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <div class="brand-logo">
+          <i class="fa-solid fa-landmark"></i>
+        </div>
+
+        <div>
+          <h1>BARANGAY MANAGEMENT SYSTEM</h1>
+          <p>Barangay Sta. Ana, Pateros</p>
+        </div>
+
+      </div>
+
+      <div class="topbar-right">
+
+        <div class="breadcrumb">
+          Financial / Financial Management
+        </div>
+
+        <button class="icon-btn">
+          <i class="fa-regular fa-bell"></i>
+        </button>
+
+        <button class="icon-btn profile-btn">
+          <i class="fa-regular fa-user"></i>
+        </button>
+
+      </div>
+
+    </header>
+
+    <!-- CONTENT -->
+    <section class="card">
+
+      <!-- HEADER -->
+      <div class="card-header chart-header">
+
+        <div class="header-left">
+
+          <h3>Revenue Records</h3>
+
+          <a href="FinancialManagementExpenses.html" class="expense-link">
+            Expense Records
+          </a>
+
+        </div>
+
+        <a href="#" class="details-link blue-link">
+          + Add Revenue
+        </a>
+
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Particulars</th>
+              <th>Amount</th>
+              <th>OR No.</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr>
+              <td>May 9, 2026</td>
+              <td>Certificate of Good Moral Character</td>
+              <td>Dela Cruz, Anne</td>
+              <td>100.00</td>
+              <td>000123</td>
+              <td class="status-paid">Paid</td>
+            </tr>
+
+            <tr>
+              <td>May 8, 2026</td>
+              <td>Community Tax</td>
+              <td>Santos, Maria</td>
+              <td>1,200.00</td>
+              <td>000124</td>
+              <td class="status-paid">Paid</td>
+            </tr>
+
+            <tr>
+              <td>May 8, 2026</td>
+              <td>Barangay Clearance</td>
+              <td>Reyes, Pedro</td>
+              <td>150.00</td>
+              <td>000125</td>
+              <td class="status-paid">Paid</td>
+            </tr>
+
+            <tr>
+              <td>May 7, 2026</td>
+              <td>Clearance Releasing</td>
+              <td>Cruz, Vince</td>
+              <td>700.00</td>
+              <td>000126</td>
+              <td class="status-paid">Paid</td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <!-- FOOTER -->
+      <div class="table-footer">
+
+        <div>
+          Showing 1 to 4 of 4 entries
+        </div>
+
+        <div class="pagination">
+
+          <span><i class="fa-solid fa-angle-left"></i></span>
+
+          <span class="page-active">1</span>
+
+          <span>2</span>
+          <span>3</span>
+          <span>4</span>
+
+          <span><i class="fa-solid fa-angle-right"></i></span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      © 2026 Barangay Financial and Revenue
+    </footer>
+
+  </main>
+
+</div>
+
+</body>
+</html>
