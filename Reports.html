@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Summary Income Report</title>
+  <title>Financial Reports</title>
 
   <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +15,32 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
   <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .message-area {
+      margin-bottom: 15px;
+    }
+
+    .error-message {
+      color: #d32f2f;
+      padding: 10px;
+      background-color: #ffebee;
+      border-radius: 4px;
+    }
+
+    .success-message {
+      color: #388e3c;
+      padding: 10px;
+      background-color: #e8f5e9;
+      border-radius: 4px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+  </style>
 </head>
 
 <body>
@@ -97,31 +123,63 @@
 
         <div class="overview-header">
           <h3>Financial Reports</h3>
-          <p>Monthly Income Summary Report</p>
+          <p id="reportSubtitle">Financial Report</p>
         </div>
+
+        <!-- MESSAGE AREA -->
+        <div id="messageArea" class="message-area"></div>
 
         <!-- FILTER -->
         <div class="filter-section">
 
           <div class="filter-group">
             <label>Report Type</label>
-            <select class="month-select">
-              <option>Monthly Financial Report</option>
-              <option>Quarterly Report</option>
-              <option>Annual Report</option>
+            <select id="reportType" class="month-select" onchange="updateFilterOptions()">
+              <option value="monthly">Monthly Financial Report</option>
+              <option value="quarterly">Quarterly Report</option>
+              <option value="annual">Annual Report</option>
+              <option value="summary">Summary Report</option>
+            </select>
+          </div>
+
+          <div class="filter-group" id="monthFilterGroup">
+            <label>Month</label>
+            <select id="monthSelect" class="month-select small">
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5" selected>May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </div>
+
+          <div class="filter-group" id="quarterFilterGroup" style="display:none;">
+            <label>Quarter</label>
+            <select id="quarterSelect" class="month-select small">
+              <option value="1">Q1 (Jan-Mar)</option>
+              <option value="2">Q2 (Apr-Jun)</option>
+              <option value="3">Q3 (Jul-Sep)</option>
+              <option value="4">Q4 (Oct-Dec)</option>
             </select>
           </div>
 
           <div class="filter-group">
-            <label>Month</label>
-            <select class="month-select small">
-              <option>May 2026</option>
-              <option>April 2026</option>
-              <option>March 2026</option>
+            <label>Year</label>
+            <select id="yearSelect" class="month-select small">
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026" selected>2026</option>
             </select>
           </div>
 
-          <button class="generate-btn">Generate Report</button>
+          <button class="generate-btn" onclick="generateReport()">Generate Report</button>
 
         </div>
 
@@ -131,17 +189,17 @@
 
             <div class="summary-row">
               <span>Total Revenue</span>
-              <strong>₱248,600.00</strong>
+              <strong id="totalRevenue">₱0.00</strong>
             </div>
 
             <div class="summary-row">
               <span>Total Expenses</span>
-              <strong>₱214,330.00</strong>
+              <strong id="totalExpenses">₱0.00</strong>
             </div>
 
             <div class="summary-row last">
               <span>Net Collection</span>
-              <strong class="positive">₱34,250.00</strong>
+              <strong id="netBalance" class="positive">₱0.00</strong>
             </div>
 
           </div>
@@ -149,7 +207,7 @@
 
         <!-- DOWNLOAD -->
         <div class="download-wrapper">
-          <button class="download-btn">
+          <button class="download-btn" onclick="downloadReport()">
             <i class="fa-solid fa-download"></i>
             View / Download Report
           </button>
@@ -163,6 +221,166 @@
 
     </main>
   </div>
+
+  <script>
+    const API_BASE_URL = 'http://localhost:8000';
+    let currentReport = null;
+
+    // Load summary report on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      generateReport();
+    });
+
+    // Update filter options based on report type
+    function updateFilterOptions() {
+      const reportType = document.getElementById('reportType').value;
+      const monthFilterGroup = document.getElementById('monthFilterGroup');
+      const quarterFilterGroup = document.getElementById('quarterFilterGroup');
+
+      if (reportType === 'monthly') {
+        monthFilterGroup.style.display = 'block';
+        quarterFilterGroup.style.display = 'none';
+        document.getElementById('reportSubtitle').textContent = 'Monthly Income Summary Report';
+      } else if (reportType === 'quarterly') {
+        monthFilterGroup.style.display = 'none';
+        quarterFilterGroup.style.display = 'block';
+        document.getElementById('reportSubtitle').textContent = 'Quarterly Income Summary Report';
+      } else if (reportType === 'annual') {
+        monthFilterGroup.style.display = 'none';
+        quarterFilterGroup.style.display = 'none';
+        document.getElementById('reportSubtitle').textContent = 'Annual Income Summary Report';
+      } else if (reportType === 'summary') {
+        monthFilterGroup.style.display = 'none';
+        quarterFilterGroup.style.display = 'none';
+        document.getElementById('reportSubtitle').textContent = 'Overall Summary Report';
+      }
+    }
+
+    // Generate report based on selected filters
+    async function generateReport() {
+      const reportType = document.getElementById('reportType').value;
+      const year = document.getElementById('yearSelect').value;
+      const month = document.getElementById('monthSelect').value;
+      const quarter = document.getElementById('quarterSelect').value;
+
+      let url = `${API_BASE_URL}/api/reports`;
+      
+      try {
+        if (reportType === 'monthly') {
+          url += `/monthly?month=${month}&year=${year}`;
+        } else if (reportType === 'quarterly') {
+          url += `/quarterly?quarter=${quarter}&year=${year}`;
+        } else if (reportType === 'annual') {
+          url += `/annual?year=${year}`;
+        } else if (reportType === 'summary') {
+          url += '/summary';
+        }
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch report');
+        
+        const data = await response.json();
+        currentReport = data;
+        displayReport(data);
+        showMessage('Report generated successfully', 'success');
+      } catch (error) {
+        console.error('Error generating report:', error);
+        showMessage('Error generating report: ' + error.message, 'error');
+        displayReport(null);
+      }
+    }
+
+    // Display report data
+    function displayReport(data) {
+      if (!data) {
+        document.getElementById('totalRevenue').textContent = '₱0.00';
+        document.getElementById('totalExpenses').textContent = '₱0.00';
+        document.getElementById('netBalance').textContent = '₱0.00';
+        return;
+      }
+
+      const formatCurrency = (amount) => {
+        return '₱' + parseFloat(amount).toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      };
+
+      document.getElementById('totalRevenue').textContent = formatCurrency(data.total_revenue);
+      document.getElementById('totalExpenses').textContent = formatCurrency(data.total_expenses);
+      
+      const netBalance = parseFloat(data.net_balance);
+      const netBalanceElement = document.getElementById('netBalance');
+      netBalanceElement.textContent = formatCurrency(netBalance);
+      
+      // Change color based on positive/negative
+      if (netBalance >= 0) {
+        netBalanceElement.className = 'positive';
+      } else {
+        netBalanceElement.className = 'negative';
+        netBalanceElement.style.color = '#d32f2f';
+      }
+    }
+
+    // Show message
+    function showMessage(message, type) {
+      const messageArea = document.getElementById('messageArea');
+      const className = type === 'success' ? 'success-message' : 'error-message';
+      messageArea.innerHTML = `<div class="${className}">${message}</div>`;
+      
+      setTimeout(() => {
+        messageArea.innerHTML = '';
+      }, 3000);
+    }
+
+    // Download report
+    function downloadReport() {
+      if (!currentReport) {
+        showMessage('Please generate a report first', 'error');
+        return;
+      }
+
+      // Create a simple text report
+      const reportType = document.getElementById('reportType').value;
+      const year = document.getElementById('yearSelect').value;
+      const month = document.getElementById('monthSelect').value;
+      const quarter = document.getElementById('quarterSelect').value;
+
+      let reportText = 'BARANGAY FINANCIAL REPORT\n';
+      reportText += '========================\n\n';
+
+      if (reportType === 'monthly') {
+        const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June',
+                           'July', 'August', 'September', 'October', 'November', 'December'];
+        reportText += `Report Type: Monthly (${monthNames[month]} ${year})\n`;
+      } else if (reportType === 'quarterly') {
+        reportText += `Report Type: Quarterly (Q${quarter} ${year})\n`;
+      } else if (reportType === 'annual') {
+        reportText += `Report Type: Annual (${year})\n`;
+      } else {
+        reportText += 'Report Type: Summary (All Time)\n';
+      }
+
+      reportText += `Generated: ${new Date().toLocaleDateString()}\n\n`;
+      reportText += 'FINANCIAL SUMMARY\n';
+      reportText += '-----------------\n';
+      reportText += `Total Revenue: ₱${parseFloat(currentReport.total_revenue).toFixed(2)}\n`;
+      reportText += `Total Expenses: ₱${parseFloat(currentReport.total_expenses).toFixed(2)}\n`;
+      reportText += `Net Balance: ₱${parseFloat(currentReport.net_balance).toFixed(2)}\n\n`;
+      reportText += 'Generated by: Barangay Financial Management System\n';
+
+      // Create and download file
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(reportText));
+      element.setAttribute('download', `Financial_Report_${new Date().getTime()}.txt`);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+      
+      showMessage('Report downloaded successfully', 'success');
+    }
+  </script>
 
 </body>
 </html>
