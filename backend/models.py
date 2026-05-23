@@ -51,6 +51,17 @@ class IRAAllocation(Base):
     utilization_status = Column(String, default="active")
     created_at = Column(DateTime, default=datetime.utcnow)
 
+class IRAAllocationDetail(Base):
+    __tablename__ = "ira_allocation_details"
+
+    id = Column(Integer, primary_key=True, index=True)
+    ira_id = Column(Integer, ForeignKey("ira_allocation.id"), index=True)
+    category_name = Column(String)
+    amount = Column(Float)
+    description = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
 class TransactionLedger(Base):
     __tablename__ = "transaction_ledger"
 

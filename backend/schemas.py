@@ -103,6 +103,28 @@ class IRAAllocationResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class IRAAllocationDetailCreate(BaseModel):
+    category_name: str
+    amount: float
+    description: Optional[str] = None
+
+class IRAAllocationDetailUpdate(BaseModel):
+    category_name: Optional[str] = None
+    amount: Optional[float] = None
+    description: Optional[str] = None
+
+class IRAAllocationDetailResponse(BaseModel):
+    id: int
+    ira_id: int
+    category_name: str
+    amount: float
+    description: Optional[str]
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
 class TransactionLedgerResponse(BaseModel):
     id: int
     transaction_type: str

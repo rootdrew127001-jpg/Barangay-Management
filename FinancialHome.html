@@ -280,23 +280,11 @@
 
     </div>
 
-    <div class="utilization-breakdown">
-
+    <div class="utilization-breakdown" id="categoriesContainer">
       <div class="breakdown-item">
-        <span>Infrastructure</span>
-        <strong id="infrastructurePercent">0%</strong>
+        <span>Loading categories...</span>
+        <strong>---</strong>
       </div>
-
-      <div class="breakdown-item">
-        <span>Health</span>
-        <strong id="healthPercent">0%</strong>
-      </div>
-
-      <div class="breakdown-item">
-        <span>Education</span>
-        <strong id="educationPercent">0%</strong>
-      </div>
-
     </div>
 
   </div>
@@ -487,22 +475,104 @@ async function loadRecentTransactions() {
 
 async function loadIraUtilization() {
   try {
-    const ira = await fetchJson(`${API_BASE}/ira`);
-    const utilizedPercent = Math.min(
-      ira.infrastructure_percent + ira.health_percent + ira.education_percent,
-      100
-    );
+    const today = new Date();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
 
-    document.getElementById('iraProgress').textContent = `${formatPercent(utilizedPercent)}%`;
+    const report = await fetchJson(`${API_BASE}/reports/monthly?month=${month}&year=${year}`);
+    const totalRevenue = report.total_revenue;
+    const iraAmount = totalRevenue * 0.20; 
+
+    let ira;
+    try {
+      ira = await fetchJson(`${API_BASE}/ira`);
+      if (ira.total_ira !== iraAmount) {
+        const response = await fetch(`${API_BASE}/ira/${ira.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ total_ira: iraAmount })
+        });
+        if (response.ok) {
+          ira = await response.json();
+        }
+      }
+    } catch (_) {
+      const response = await fetch(`${API_BASE}/ira`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          month,
+          year,
+          total_ira: iraAmount
+        })
+      });
+      if (response.ok) {
+        ira = await response.json();
+      } else {
+        throw new Error('Failed to create IRA allocation');
+      }
+    }
+
+    let details = [];
+    try {
+      details = await fetchJson(`${API_BASE}/ira/${ira.id}/details`);
+    } catch (_) {
+      details = [];
+    }
+
+    const allocatedAmount = details.reduce((sum, detail) => sum + detail.amount, 0);
+    const utilizationPercent = iraAmount > 0 ? Math.round((allocatedAmount / iraAmount) * 100) : 0;
+
+    document.getElementById('iraProgress').textContent = `${utilizationPercent}%`;
     document.getElementById('iraRing').style.background =
-      `conic-gradient(var(--blue) 0% ${utilizedPercent}%, #e5e7eb ${utilizedPercent}% 100%)`;
-    document.getElementById('infrastructurePercent').textContent = `${formatPercent(ira.infrastructure_percent)}%`;
-    document.getElementById('healthPercent').textContent = `${formatPercent(ira.health_percent)}%`;
-    document.getElementById('educationPercent').textContent = `${formatPercent(ira.education_percent)}%`;
+      `conic-gradient(var(--blue) 0% ${utilizationPercent}%, #e5e7eb ${utilizationPercent}% 100%)`;
+
+    const container = document.getElementById('categoriesContainer');
+    
+    if (details.length === 0) {
+      container.innerHTML = `
+        <div class="breakdown-item">
+          <span>No allocations yet</span>
+          <strong>---</strong>
+        </div>
+        <div class="breakdown-item" style="font-size: 12px; color: var(--text-light);">
+          <span>Available: ₱${formatCurrencyShort(iraAmount)} (20% of ₱${formatCurrencyShort(totalRevenue)})</span>
+        </div>
+      `;
+    } else {
+      container.innerHTML = details.map(detail => `
+        <div class="breakdown-item">
+          <span>${escapeHtml(detail.category_name)}</span>
+          <strong>₱${detail.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+        </div>
+      `).join('') + `
+        <div class="breakdown-item" style="border-top: 1px solid #e5e7eb; padding-top: 8px; margin-top: 8px; font-weight: 600;">
+          <span>Remaining Balance</span>
+          <strong style="color: ${allocatedAmount >= iraAmount ? '#d32f2f' : '#4caf50'}">₱${(iraAmount - allocatedAmount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+        </div>
+      `;
+    }
   } catch (error) {
+    console.error('IRA Utilization error:', error);
     document.getElementById('iraProgress').textContent = 'N/A';
-    showDashboardError('IRA allocation is not available for the current month.');
+    document.getElementById('categoriesContainer').innerHTML = `
+      <div class="breakdown-item">
+        <span>Error loading IRA data</span>
+        <strong>---</strong>
+      </div>
+    `;
   }
+}
+
+function formatCurrencyShort(value) {
+  const num = Number(value || 0);
+  if (num >= 1000000) {
+    return (num / 1000000).toLocaleString('en-US', { maximumFractionDigits: 1 }) + 'M';
+  }
+  if (num >= 1000) {
+    return (num / 1000).toLocaleString('en-US', { maximumFractionDigits: 1 }) + 'K';
+  }
+  return num.toLocaleString('en-US', { maximumFractionDigits: 0 });
 }
 
 async function loadMonthlyBreakdown(startDate, endDate) {

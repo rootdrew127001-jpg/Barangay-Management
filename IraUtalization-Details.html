@@ -83,8 +83,8 @@
               Dashboard
             </a>
 
-            <a href="IRAUtilization.html" class="dropdown-item">
-              Resident Management
+            <a href="IraUtalization-Details.html" class="dropdown-item">
+              IRA Utilization
             </a>
 
             <a href="#" class="dropdown-item">
@@ -173,119 +173,90 @@
 
         <!-- HEADER -->
         <div class="overview-header">
-
-          <h3>IRA Utilization</h3>
-
-          <p>
-            Infrastructure Reserve Allocation (20% of revenue)
-          </p>
-
+          <h3>IRA Utilization Management</h3>
+          <p>Infrastructure Reserve Allocation - Distribute your monthly IRA budget across custom categories</p>
         </div>
 
-        <!-- CONTENT -->
-        <div class="ira-content">
+        <!-- MESSAGE AREA -->
+        <div id="messageArea" style="margin: 15px 0; padding: 12px 16px; border-radius: 6px; display: none; font-weight: 500;"></div>
 
-          <!-- PROGRESS -->
-          <div class="progress-wrapper">
-
-            <div class="ira-progress-ring">
-
-              <div class="ira-progress-value">
-                72%
-              </div>
-
-            </div>
-
-          </div>
-
-          <!-- DETAILS -->
-          <div class="ira-details">
-
-            <h1>
-              ₱240,000 / ₱333,333
-            </h1>
-
-            <p>
-              Used for Development Projects
-            </p>
-
-            <span class="status-badge">
-              On Track
-            </span>
-
-          </div>
-
+        <!-- MONTH/YEAR SELECTOR -->
+        <div style="display: flex; gap: 10px; margin: 20px 0; flex-wrap: wrap;">
+          <select id="monthSelect" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+          </select>
+          <select id="yearSelect" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026" selected>2026</option>
+          </select>
+          <button onclick="loadIRAMonth()" style="padding: 8px 16px; background: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Load Month</button>
+          <button onclick="calculateIRAFromRevenue()" style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Auto-Calculate from Revenue</button>
         </div>
 
-        <!-- BREAKDOWN -->
-        <div class="ira-breakdown">
-
-          <h3 class="section-title">
-            Utilization Breakdown
-          </h3>
-
-          <!-- ITEM -->
-          <div class="ira-item">
-
-            <div class="ira-item-header">
-
-              <span>Infrastructure & Utilities</span>
-
-              <strong>60%</strong>
-
+        <!-- IRA SUMMARY -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+              <p style="color: #666; margin: 0;">Total IRA Available</p>
+              <h2 id="totalIRA" style="margin: 10px 0; color: #0066cc;">₱0.00</h2>
             </div>
-
-            <div class="ira-bar-container">
-
-              <div class="ira-bar fill-60"></div>
-
+            <div>
+              <p style="color: #666; margin: 0;">Remaining Balance</p>
+              <h2 id="remainingBalance" style="margin: 10px 0; color: #28a745;">₱0.00</h2>
             </div>
-
           </div>
+        </div>
 
-          <!-- ITEM -->
-          <div class="ira-item">
-
-            <div class="ira-item-header">
-
-              <span>Health & Sanitation</span>
-
-              <strong>30%</strong>
-
+        <!-- ADD ALLOCATION FORM -->
+        <div style="background: #fff; border: 2px solid #e0e0e0; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h4 style="margin-top: 0;">Add Allocation Category</h4>
+          <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 10px; align-items: end;">
+            <div>
+              <label style="display: block; font-weight: 500; margin-bottom: 5px;">Category Name</label>
+              <input type="text" id="categoryName" placeholder="e.g., Road Repair, Health Clinic" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
             </div>
-
-            <div class="ira-bar-container">
-
-              <div class="ira-bar fill-30"></div>
-
+            <div>
+              <label style="display: block; font-weight: 500; margin-bottom: 5px;">Amount (₱)</label>
+              <input type="number" id="categoryAmount" placeholder="0.00" min="0" step="100" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
             </div>
-
+            <button onclick="addAllocationCategory()" style="padding: 8px 20px; background: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">+ Add</button>
           </div>
+        </div>
 
-          <!-- ITEM -->
-          <div class="ira-item">
-
-            <div class="ira-item-header">
-
-              <span>Education & Training</span>
-
-              <strong>20%</strong>
-
-            </div>
-
-            <div class="ira-bar-container">
-
-              <div class="ira-bar fill-20"></div>
-
-            </div>
-
-          </div>
-
+        <!-- ALLOCATION CATEGORIES TABLE -->
+        <div style="margin: 20px 0;">
+          <h4>Allocation Categories</h4>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <thead>
+              <tr style="background: #f0f0f0; border-bottom: 2px solid #ddd;">
+                <th style="padding: 12px; text-align: left;">Category</th>
+                <th style="padding: 12px; text-align: right;">Amount</th>
+                <th style="padding: 12px; text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="allocationTable">
+              <tr>
+                <td colspan="3" style="padding: 20px; text-align: center; color: #999;">No categories added yet</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <!-- BUTTON -->
-        <button class="download-btn">
-          View IRA Projects
+        <button class="download-btn" onclick="downloadIRAReport()" style="margin-top: 20px;">
+          Download IRA Report
         </button>
 
       </section>
@@ -300,6 +271,299 @@
     </main>
 
   </div>
+
+  <script>
+    const API_BASE_URL = 'http://localhost:8000';
+    let currentIRA = null;
+    let allocationDetails = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setDefaultMonth();
+      loadIRAMonth();
+    });
+
+    function setDefaultMonth() {
+      const today = new Date();
+      document.getElementById('monthSelect').value = today.getMonth() + 1;
+      document.getElementById('yearSelect').value = today.getFullYear();
+    }
+
+    async function calculateIRAFromRevenue() {
+      const month = document.getElementById('monthSelect').value;
+      const year = document.getElementById('yearSelect').value;
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/ira/calculate/${month}/${year}`);
+        if (!response.ok) throw new Error('Failed to calculate IRA');
+        
+        const data = await response.json();
+        showMessage(`IRA calculated: ₱${formatCurrency(data.ira_amount)} (20% of ₱${formatCurrency(data.total_revenue)})`, 'success');
+        
+        // Reload IRA data
+        currentIRA = data.ira_allocation;
+        await loadAllocationDetails();
+      } catch (error) {
+        showMessage('Error calculating IRA: ' + error.message, 'error');
+      }
+    }
+
+    async function loadIRAMonth() {
+      const month = document.getElementById('monthSelect').value;
+      const year = document.getElementById('yearSelect').value;
+      
+      try {
+        // Try to get IRA for this specific month/year
+        const response = await fetch(`${API_BASE_URL}/api/ira/history?year=${year}`);
+        if (!response.ok) throw new Error('Failed to load IRA data');
+        
+        const iraList = await response.json();
+        const ira = iraList.find(i => i.month == month);
+        
+        if (!ira) {
+          showMessage(`No IRA data for ${month}/${year}. Use "Auto-Calculate from Revenue" to create one.`, 'warning');
+          resetDisplay();
+          return;
+        }
+        
+        currentIRA = ira;
+        await loadAllocationDetails();
+        updateIRASummary();
+      } catch (error) {
+        showMessage('Error loading IRA: ' + error.message, 'error');
+      }
+    }
+
+    async function loadAllocationDetails() {
+      if (!currentIRA) return;
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/ira/${currentIRA.id}/details`);
+        if (!response.ok) throw new Error('Failed to load allocation details');
+        
+        allocationDetails = await response.json();
+        displayAllocationDetails();
+        updateIRASummary();
+      } catch (error) {
+        console.error('Error loading allocation details:', error);
+        allocationDetails = [];
+        displayAllocationDetails();
+      }
+    }
+
+    function updateIRASummary() {
+      if (!currentIRA) return;
+      
+      const totalAllocated = allocationDetails.reduce((sum, detail) => sum + detail.amount, 0);
+      const remaining = currentIRA.total_ira - totalAllocated;
+      
+      document.getElementById('totalIRA').textContent = `₱${formatCurrency(currentIRA.total_ira)}`;
+      document.getElementById('remainingBalance').textContent = `₱${formatCurrency(remaining)}`;
+      
+      // Change remaining balance color
+      const balanceEl = document.getElementById('remainingBalance');
+      if (remaining < 0) {
+        balanceEl.style.color = '#dc3545';
+      } else if (remaining === 0) {
+        balanceEl.style.color = '#ffc107';
+      } else {
+        balanceEl.style.color = '#28a745';
+      }
+    }
+
+    function displayAllocationDetails() {
+      const table = document.getElementById('allocationTable');
+      
+      if (allocationDetails.length === 0) {
+        table.innerHTML = '<tr><td colspan="3" style="padding: 20px; text-align: center; color: #999;">No categories added yet</td></tr>';
+        return;
+      }
+      
+      table.innerHTML = allocationDetails.map(detail => `
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 12px;">${detail.category_name}</td>
+          <td style="padding: 12px; text-align: right;"><strong>₱${formatCurrency(detail.amount)}</strong></td>
+          <td style="padding: 12px; text-align: center;">
+            <button onclick="editAllocation(${detail.id})" style="background: none; border: none; color: #0066cc; cursor: pointer; margin-right: 10px;">
+              <i class="fa-solid fa-edit"></i>
+            </button>
+            <button onclick="deleteAllocation(${detail.id})" style="background: none; border: none; color: #dc3545; cursor: pointer;">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function addAllocationCategory() {
+      if (!currentIRA) {
+        showMessage('Please load or create an IRA allocation first', 'error');
+        return;
+      }
+      
+      const categoryName = document.getElementById('categoryName').value.trim();
+      const categoryAmount = parseFloat(document.getElementById('categoryAmount').value);
+      
+      if (!categoryName) {
+        showMessage('Please enter a category name', 'error');
+        return;
+      }
+      
+      if (!categoryAmount || categoryAmount <= 0) {
+        showMessage('Please enter a valid amount', 'error');
+        return;
+      }
+      
+      // Check remaining balance
+      const totalAllocated = allocationDetails.reduce((sum, detail) => sum + detail.amount, 0);
+      const remaining = currentIRA.total_ira - totalAllocated;
+      
+      if (categoryAmount > remaining) {
+        showMessage(`Exceeds remaining balance (₱${formatCurrency(remaining)})`, 'error');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/ira/${currentIRA.id}/details`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            category_name: categoryName,
+            amount: categoryAmount
+          })
+        });
+        
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.detail || 'Failed to add allocation');
+        }
+        
+        showMessage('Category added successfully', 'success');
+        document.getElementById('categoryName').value = '';
+        document.getElementById('categoryAmount').value = '';
+        await loadAllocationDetails();
+      } catch (error) {
+        showMessage('Error adding category: ' + error.message, 'error');
+      }
+    }
+
+    async function deleteAllocation(detailId) {
+      if (!confirm('Delete this allocation?')) return;
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/ira/${currentIRA.id}/details/${detailId}`, {
+          method: 'DELETE'
+        });
+        
+        if (!response.ok) throw new Error('Failed to delete allocation');
+        
+        showMessage('Allocation deleted successfully', 'success');
+        await loadAllocationDetails();
+      } catch (error) {
+        showMessage('Error deleting allocation: ' + error.message, 'error');
+      }
+    }
+
+    function editAllocation(detailId) {
+      const detail = allocationDetails.find(d => d.id === detailId);
+      if (detail) {
+        document.getElementById('categoryName').value = detail.category_name;
+        document.getElementById('categoryAmount').value = detail.amount;
+        // User would need to delete and re-add for now, or we could implement inline edit
+        showMessage('To edit: delete and re-add the category', 'info');
+      }
+    }
+
+    function formatCurrency(amount) {
+      return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function resetDisplay() {
+      document.getElementById('totalIRA').textContent = '₱0.00';
+      document.getElementById('remainingBalance').textContent = '₱0.00';
+      document.getElementById('allocationTable').innerHTML = '<tr><td colspan="3" style="padding: 20px; text-align: center; color: #999;">No data available</td></tr>';
+      allocationDetails = [];
+      currentIRA = null;
+    }
+
+    function downloadIRAReport() {
+      if (!currentIRA) {
+        showMessage('No IRA data to download', 'error');
+        return;
+      }
+
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                         'July', 'August', 'September', 'October', 'November', 'December'];
+      
+      const totalAllocated = allocationDetails.reduce((sum, detail) => sum + detail.amount, 0);
+      const remaining = currentIRA.total_ira - totalAllocated;
+      
+      let categoryList = '';
+      allocationDetails.forEach((detail, index) => {
+        categoryList += `${index + 1}. ${detail.category_name}: ₱${formatCurrency(detail.amount)}\n`;
+      });
+      
+      const content = `
+BARANGAY IRA UTILIZATION REPORT
+===============================
+Generated: ${new Date().toLocaleString()}
+
+Period: ${monthNames[currentIRA.month - 1]} ${currentIRA.year}
+
+ALLOCATION SUMMARY:
+-------------------
+Total IRA Allocation: ₱${formatCurrency(currentIRA.total_ira)}
+Total Allocated: ₱${formatCurrency(totalAllocated)}
+Remaining Balance: ₱${formatCurrency(remaining)}
+
+ALLOCATION CATEGORIES:
+-------------------
+${categoryList || 'No categories allocated yet'}
+
+---
+Barangay Management System - Finance Module
+      `;
+
+      const blob = new Blob([content.trim()], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `IRA_Report_${currentIRA.month}_${currentIRA.year}.txt`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      showMessage('IRA Report downloaded successfully', 'success');
+    }
+
+    function showMessage(message, type) {
+      const messageArea = document.getElementById('messageArea');
+      messageArea.textContent = message;
+      messageArea.style.display = 'block';
+      
+      if (type === 'success') {
+        messageArea.style.background = '#d4edda';
+        messageArea.style.color = '#155724';
+        messageArea.style.border = '1px solid #c3e6cb';
+      } else if (type === 'error') {
+        messageArea.style.background = '#f8d7da';
+        messageArea.style.color = '#721c24';
+        messageArea.style.border = '1px solid #f5c6cb';
+      } else if (type === 'warning') {
+        messageArea.style.background = '#fff3cd';
+        messageArea.style.color = '#856404';
+        messageArea.style.border = '1px solid #ffeaa7';
+      } else if (type === 'info') {
+        messageArea.style.background = '#d1ecf1';
+        messageArea.style.color = '#0c5460';
+        messageArea.style.border = '1px solid #bee5eb';
+      }
+
+      setTimeout(() => {
+        messageArea.style.display = 'none';
+      }, 5000);
+    }
+  </script>
 
 </body>
 </html>
