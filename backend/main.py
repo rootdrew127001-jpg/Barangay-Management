@@ -6,7 +6,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from .database import engine
 from .models import Base
-from .routers import revenue, expenses, reports, transactions, ira
+from .routers import revenue, expenses, reports, transactions, ira, residents
 from .seed_data import seed_database
 
 Base.metadata.create_all(bind=engine)
@@ -29,6 +29,7 @@ app.include_router(expenses.router)
 app.include_router(reports.router)
 app.include_router(transactions.router)
 app.include_router(ira.router)
+app.include_router(residents.router)
 
 @app.on_event("startup")
 def startup_event():

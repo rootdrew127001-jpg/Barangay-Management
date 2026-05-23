@@ -63,3 +63,15 @@ class TransactionLedger(Base):
     credit_amount = Column(Float, default=0)
     running_balance = Column(Float, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class Resident(Base):
+    __tablename__ = "residents"
+
+    id = Column(Integer, primary_key=True, index=True)
+    resident_id = Column(String, unique=True, index=True)
+    full_name = Column(String, index=True)
+    address = Column(String)
+    contact_number = Column(String, nullable=True)
+    status = Column(String, default="Active")
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
