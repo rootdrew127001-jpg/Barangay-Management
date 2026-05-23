@@ -6,7 +6,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Summary Income | Barangay Management System</title>
+  <title>Revenue Management | Barangay Management System</title>
 
   <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,6 +20,23 @@
 
   <!-- MAIN CSS -->
   <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+    .modal.active { display: flex; align-items: center; justify-content: center; }
+    .modal-content { background: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; }
+    .modal-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
+    .modal-header h2 { margin: 0; }
+    .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+    .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+    .btn-submit { background: #0d3b66; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+    .btn-delete { background: #d32f2f; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+    .action-cell { display: flex; gap: 5px; }
+    .loading { text-align: center; padding: 20px; }
+    .error { color: #d32f2f; padding: 10px; background: #ffebee; border-radius: 4px; margin-bottom: 15px; }
+  </style>
 
 </head>
 
@@ -81,7 +98,7 @@
 
         <div class="dropdown-menu">
 
-          <a href="financialhome.html" class="dropdown-item">
+          <a href="FinancialHome.html" class="dropdown-item">
             Dashboard
           </a>
 
@@ -155,7 +172,7 @@
       <div class="topbar-right">
 
         <div class="breadcrumb">
-          Financial / Financial Management
+          Financial / Revenue Management
         </div>
 
         <button class="icon-btn">
@@ -186,66 +203,35 @@
 
         </div>
 
-        <a href="#" class="details-link blue-link">
+        <button onclick="openAddModal()" class="details-link blue-link" style="border: none; background: none; cursor: pointer;">
           + Add Revenue
-        </a>
+        </button>
 
       </div>
+
+      <div id="errorMessage" class="error" style="display: none;"></div>
 
       <!-- TABLE -->
       <div class="table-wrapper">
 
-        <table>
+        <div id="loadingMessage" class="loading">
+          <i class="fa-solid fa-spinner fa-spin"></i> Loading revenue data...
+        </div>
+
+        <table id="revenueTable" style="display: none;">
 
           <thead>
             <tr>
               <th>Date</th>
-              <th>Category</th>
-              <th>Particulars</th>
+              <th>Source Type</th>
               <th>Amount</th>
               <th>OR No.</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
 
-          <tbody>
-
-            <tr>
-              <td>May 9, 2026</td>
-              <td>Certificate of Good Moral Character</td>
-              <td>Dela Cruz, Anne</td>
-              <td>100.00</td>
-              <td>000123</td>
-              <td class="status-paid">Paid</td>
-            </tr>
-
-            <tr>
-              <td>May 8, 2026</td>
-              <td>Community Tax</td>
-              <td>Santos, Maria</td>
-              <td>1,200.00</td>
-              <td>000124</td>
-              <td class="status-paid">Paid</td>
-            </tr>
-
-            <tr>
-              <td>May 8, 2026</td>
-              <td>Barangay Clearance</td>
-              <td>Reyes, Pedro</td>
-              <td>150.00</td>
-              <td>000125</td>
-              <td class="status-paid">Paid</td>
-            </tr>
-
-            <tr>
-              <td>May 7, 2026</td>
-              <td>Clearance Releasing</td>
-              <td>Cruz, Vince</td>
-              <td>700.00</td>
-              <td>000126</td>
-              <td class="status-paid">Paid</td>
-            </tr>
-
+          <tbody id="revenueTableBody">
           </tbody>
 
         </table>
@@ -255,22 +241,8 @@
       <!-- FOOTER -->
       <div class="table-footer">
 
-        <div>
-          Showing 1 to 4 of 4 entries
-        </div>
-
-        <div class="pagination">
-
-          <span><i class="fa-solid fa-angle-left"></i></span>
-
-          <span class="page-active">1</span>
-
-          <span>2</span>
-          <span>3</span>
-          <span>4</span>
-
-          <span><i class="fa-solid fa-angle-right"></i></span>
-
+        <div id="tableInfo">
+          Showing 0 entries
         </div>
 
       </div>
@@ -285,6 +257,207 @@
   </main>
 
 </div>
+
+<!-- ADD/EDIT MODAL -->
+<div id="revenueModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modalTitle">Add Revenue</h2>
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+    </div>
+    <form id="revenueForm" onsubmit="handleSubmit(event)">
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="date" required>
+      </div>
+      <div class="form-group">
+        <label>Source Type</label>
+        <select id="source_type" required>
+          <option value="">Select source</option>
+          <option value="certificate">Certificate</option>
+          <option value="community_tax">Community Tax</option>
+          <option value="clearance">Barangay Clearance</option>
+          <option value="building_permit">Building Permit</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Amount</label>
+        <input type="number" id="amount" step="0.01" required>
+      </div>
+      <div class="form-group">
+        <label>OR Number</label>
+        <input type="text" id="or_number" placeholder="e.g., OR-001">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="payment_status">
+          <option value="pending">Pending</option>
+          <option value="paid">Paid</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <input type="text" id="notes" placeholder="Optional notes">
+      </div>
+      <button type="submit" class="btn-submit">Save Revenue</button>
+    </form>
+  </div>
+</div>
+
+<script>
+const API_BASE = 'http://localhost:8000/api';
+let currentEditId = null;
+
+async function loadRevenue() {
+  try {
+    const response = await fetch(`${API_BASE}/revenue`);
+    if (!response.ok) throw new Error('Failed to load revenue data');
+
+    const revenues = await response.json();
+    displayRevenue(revenues);
+    document.getElementById('loadingMessage').style.display = 'none';
+    document.getElementById('revenueTable').style.display = 'table';
+  } catch (error) {
+    showError('Error loading revenue data: ' + error.message);
+    document.getElementById('loadingMessage').style.display = 'none';
+  }
+}
+
+function displayRevenue(revenues) {
+  const tbody = document.getElementById('revenueTableBody');
+  tbody.innerHTML = '';
+
+  revenues.forEach(revenue => {
+    const row = document.createElement('tr');
+    const date = new Date(revenue.date).toLocaleDateString();
+    const statusClass = revenue.payment_status === 'paid' ? 'status-paid' : 'status-pending';
+
+    row.innerHTML = `
+      <td>${date}</td>
+      <td>${revenue.source_type}</td>
+      <td>₱${revenue.amount.toFixed(2)}</td>
+      <td>${revenue.or_number || '-'}</td>
+      <td class="${statusClass}">${revenue.payment_status}</td>
+      <td>
+        <div class="action-cell">
+          <button onclick="editRevenue(${revenue.id})" class="btn-delete" style="background: #1976d2;">Edit</button>
+          <button onclick="deleteRevenue(${revenue.id})" class="btn-delete">Delete</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  document.getElementById('tableInfo').textContent = `Showing ${revenues.length} entries`;
+}
+
+function openAddModal() {
+  currentEditId = null;
+  document.getElementById('modalTitle').textContent = 'Add Revenue';
+  document.getElementById('revenueForm').reset();
+  document.getElementById('revenueModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('revenueModal').classList.remove('active');
+  currentEditId = null;
+}
+
+async function editRevenue(id) {
+  try {
+    const response = await fetch(`${API_BASE}/revenue/${id}`);
+    if (!response.ok) throw new Error('Failed to load revenue');
+
+    const revenue = await response.json();
+    currentEditId = id;
+
+    document.getElementById('modalTitle').textContent = 'Edit Revenue';
+    document.getElementById('date').value = revenue.date;
+    document.getElementById('source_type').value = revenue.source_type;
+    document.getElementById('amount').value = revenue.amount;
+    document.getElementById('or_number').value = revenue.or_number || '';
+    document.getElementById('payment_status').value = revenue.payment_status;
+    document.getElementById('notes').value = revenue.notes || '';
+
+    document.getElementById('revenueModal').classList.add('active');
+  } catch (error) {
+    showError('Error loading revenue: ' + error.message);
+  }
+}
+
+async function handleSubmit(event) {
+  event.preventDefault();
+
+  const data = {
+    date: document.getElementById('date').value,
+    source_type: document.getElementById('source_type').value,
+    amount: parseFloat(document.getElementById('amount').value),
+    or_number: document.getElementById('or_number').value,
+    payment_status: document.getElementById('payment_status').value,
+    notes: document.getElementById('notes').value
+  };
+
+  try {
+    const url = currentEditId ? `${API_BASE}/revenue/${currentEditId}` : `${API_BASE}/revenue`;
+    const method = currentEditId ? 'PUT' : 'POST';
+
+    const response = await fetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) throw new Error(await getResponseError(response, 'Failed to save revenue'));
+
+    closeModal();
+    loadRevenue();
+  } catch (error) {
+    showError('Error saving revenue: ' + error.message);
+  }
+}
+
+async function deleteRevenue(id) {
+  if (!confirm('Are you sure you want to delete this revenue record?')) return;
+
+  try {
+    const response = await fetch(`${API_BASE}/revenue/${id}`, { method: 'DELETE' });
+    if (!response.ok) throw new Error('Failed to delete revenue');
+
+    loadRevenue();
+  } catch (error) {
+    showError('Error deleting revenue: ' + error.message);
+  }
+}
+
+function showError(message) {
+  const errorDiv = document.getElementById('errorMessage');
+  errorDiv.textContent = message;
+  errorDiv.style.display = 'block';
+  setTimeout(() => { errorDiv.style.display = 'none'; }, 5000);
+}
+
+async function getResponseError(response, fallback) {
+  const text = await response.text();
+  if (!text) return fallback;
+
+  try {
+    const error = JSON.parse(text);
+    if (Array.isArray(error.detail)) {
+      const details = error.detail.map(item => item.msg || JSON.stringify(item)).join('; ');
+      return `${fallback}: ${details}`;
+    }
+    if (error.detail) return `${fallback}: ${error.detail}`;
+  } catch (_) {
+    return `${fallback}: ${text}`;
+  }
+
+  return fallback;
+}
+
+// Load data on page load
+document.addEventListener('DOMContentLoaded', loadRevenue);
+</script>
 
 </body>
 </html>

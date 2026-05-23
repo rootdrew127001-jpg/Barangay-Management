@@ -15,6 +15,17 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .dashboard-error {
+      display: none;
+      margin-bottom: 16px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #ffebee;
+      color: #d32f2f;
+      font-size: 14px;
+    }
+  </style>
 </head>
 
 <body>
@@ -155,6 +166,8 @@
 
       </header>
 
+<div id="dashboardError" class="dashboard-error"></div>
+
 <!-- METRIC CARDS -->
 <section class="metrics-grid">
 
@@ -166,7 +179,7 @@
 
     <div class="metric-content">
       <span>Total Revenue</span>
-      <h2>₱120,000.00</h2>
+      <h2 id="totalRevenue">Loading...</h2>
 
       <a href="Revenue-Details.html" class="details-link green-link">
         View Details <i class="fa-solid fa-arrow-right"></i>
@@ -182,7 +195,7 @@
 
     <div class="metric-content">
       <span>Total Expenses</span>
-      <h2>₱80,000.00</h2>
+      <h2 id="totalExpenses">Loading...</h2>
 
       <a href="Expenses-Details.html" class="details-link red-link">
         View Details <i class="fa-solid fa-arrow-right"></i>
@@ -198,7 +211,7 @@
 
     <div class="metric-content">
       <span>Net Balance</span>
-      <h2>₱40,000.00</h2>
+      <h2 id="netBalance">Loading...</h2>
 
       <a href="NetBalance-Details.html" class="details-link blue-link">
         View Details <i class="fa-solid fa-arrow-right"></i>
@@ -224,38 +237,7 @@
 
           <div class="bar-chart">
 
-            <div class="bars">
-
-              <div class="bar-group">
-                <div class="bar income" style="height: 140px;"></div>
-                <div class="bar expense" style="height: 90px;"></div>
-                <span>Jan</span>
-              </div>
-
-              <div class="bar-group">
-                <div class="bar income" style="height: 160px;"></div>
-                <div class="bar expense" style="height: 100px;"></div>
-                <span>Feb</span>
-              </div>
-
-              <div class="bar-group">
-                <div class="bar income" style="height: 120px;"></div>
-                <div class="bar expense" style="height: 80px;"></div>
-                <span>Mar</span>
-              </div>
-
-              <div class="bar-group">
-                <div class="bar income" style="height: 180px;"></div>
-                <div class="bar expense" style="height: 120px;"></div>
-                <span>Apr</span>
-              </div>
-
-              <div class="bar-group">
-                <div class="bar income" style="height: 150px;"></div>
-                <div class="bar expense" style="height: 95px;"></div>
-                <span>May</span>
-              </div>
-
+            <div class="bars" id="monthlyBars">
             </div>
 
             <div class="chart-legend">
@@ -290,9 +272,9 @@
 
     <div class="progress-wrapper">
 
-      <div class="progress-ring">
-        <div class="progress-value">
-          72%
+      <div class="progress-ring" id="iraRing">
+        <div class="progress-value" id="iraProgress">
+          0%
         </div>
       </div>
 
@@ -302,17 +284,17 @@
 
       <div class="breakdown-item">
         <span>Infrastructure</span>
-        <strong>40%</strong>
+        <strong id="infrastructurePercent">0%</strong>
       </div>
 
       <div class="breakdown-item">
         <span>Health</span>
-        <strong>20%</strong>
+        <strong id="healthPercent">0%</strong>
       </div>
 
       <div class="breakdown-item">
         <span>Education</span>
-        <strong>12%</strong>
+        <strong id="educationPercent">0%</strong>
       </div>
 
     </div>
@@ -352,56 +334,10 @@
         </tr>
       </thead>
 
-      <tbody>
-
+      <tbody id="recentTransactionsBody">
         <tr>
-          <td>05/10/2026</td>
-          <td>Community Tax Collection</td>
-          <td>Revenue</td>
-          <td>₱25,000</td>
-          <td>
-            <span class="badge revenue">
-              Revenue
-            </span>
-          </td>
+          <td colspan="5">Loading transactions...</td>
         </tr>
-
-        <tr>
-          <td>05/11/2026</td>
-          <td>Road Maintenance</td>
-          <td>Expense</td>
-          <td>₱15,000</td>
-          <td>
-            <span class="badge expense">
-              Expense
-            </span>
-          </td>
-        </tr>
-
-        <tr>
-          <td>05/12/2026</td>
-          <td>Barangay Permit Fees</td>
-          <td>Revenue</td>
-          <td>₱12,000</td>
-          <td>
-            <span class="badge revenue">
-              Revenue
-            </span>
-          </td>
-        </tr>
-
-        <tr>
-          <td>05/13/2026</td>
-          <td>Medical Assistance</td>
-          <td>Expense</td>
-          <td>₱8,500</td>
-          <td>
-            <span class="badge expense">
-              Expense
-            </span>
-          </td>
-        </tr>
-
       </tbody>
 
     </table>
@@ -426,38 +362,21 @@
 
     <div class="mini-card green-soft">
       <span>Collections</span>
-      <h2>₱65,000</h2>
+      <h2 id="monthlyCollections">Loading...</h2>
     </div>
 
     <div class="mini-card red-soft">
       <span>Disbursements</span>
-      <h2>₱42,000</h2>
+      <h2 id="monthlyDisbursements">Loading...</h2>
     </div>
 
   </div>
 
-  <div class="summary-list">
-
+  <div class="summary-list" id="monthlyBreakdown">
     <div class="summary-item">
-      <span>Business Permits</span>
-      <strong>₱18,000</strong>
+      <span>Loading monthly details...</span>
+      <strong></strong>
     </div>
-
-    <div class="summary-item">
-      <span>Barangay Clearance</span>
-      <strong>₱12,000</strong>
-    </div>
-
-    <div class="summary-item">
-      <span>Infrastructure Expense</span>
-      <strong>₱20,000</strong>
-    </div>
-
-    <div class="summary-item">
-      <span>Health Program</span>
-      <strong>₱9,000</strong>
-    </div>
-
   </div>
 
 </div>
@@ -471,11 +390,254 @@
         font-size: 13px;
         color: var(--text-light);
       ">
-        © 2026 Barangay Financial and Revenue
+        &copy; 2026 Barangay Financial and Revenue
       </footer>
     </main>
 
   </div>
+
+<script>
+const API_BASE = 'http://localhost:8000/api';
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+document.addEventListener('DOMContentLoaded', loadDashboard);
+
+async function loadDashboard() {
+  const today = new Date();
+  const month = today.getMonth() + 1;
+  const year = today.getFullYear();
+  const monthRange = getMonthRange(today);
+
+  try {
+    await Promise.all([
+      loadSummary(),
+      loadMonthlyChart(today),
+      loadCurrentMonth(month, year),
+      loadRecentTransactions(),
+      loadIraUtilization()
+    ]);
+    await loadMonthlyBreakdown(monthRange.start, monthRange.end);
+  } catch (error) {
+    showDashboardError(error.message);
+  }
+}
+
+async function loadSummary() {
+  const summary = await fetchJson(`${API_BASE}/reports/summary`);
+  document.getElementById('totalRevenue').textContent = formatMoney(summary.total_revenue);
+  document.getElementById('totalExpenses').textContent = formatMoney(summary.total_expenses);
+  document.getElementById('netBalance').textContent = formatMoney(summary.net_balance);
+}
+
+async function loadMonthlyChart(today) {
+  const months = getRecentMonths(today, 5);
+  const reports = await Promise.all(
+    months.map(item => fetchJson(`${API_BASE}/reports/monthly?month=${item.month}&year=${item.year}`))
+  );
+  const largest = Math.max(...reports.flatMap(report => [report.total_revenue, report.total_expenses]), 1);
+  const bars = document.getElementById('monthlyBars');
+
+  bars.innerHTML = reports.map((report, index) => {
+    const incomeHeight = getBarHeight(report.total_revenue, largest);
+    const expenseHeight = getBarHeight(report.total_expenses, largest);
+    return `
+      <div class="bar-group" title="${MONTH_NAMES[months[index].month - 1]} ${months[index].year}">
+        <div class="bar income" style="height: ${incomeHeight}px;"></div>
+        <div class="bar expense" style="height: ${expenseHeight}px;"></div>
+        <span>${MONTH_NAMES[months[index].month - 1]}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+async function loadCurrentMonth(month, year) {
+  const report = await fetchJson(`${API_BASE}/reports/monthly?month=${month}&year=${year}`);
+  document.getElementById('monthlyCollections').textContent = formatMoney(report.total_revenue);
+  document.getElementById('monthlyDisbursements').textContent = formatMoney(report.total_expenses);
+}
+
+async function loadRecentTransactions() {
+  const transactions = await fetchJson(`${API_BASE}/transactions?limit=100`);
+  const recent = transactions
+    .sort((a, b) => new Date(b.date) - new Date(a.date) || b.id - a.id)
+    .slice(0, 5);
+  const tbody = document.getElementById('recentTransactionsBody');
+
+  if (!recent.length) {
+    tbody.innerHTML = '<tr><td colspan="5">No transactions found.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = recent.map(transaction => {
+    const type = transaction.transaction_type === 'expense' ? 'expense' : 'revenue';
+    const amount = type === 'expense' ? transaction.debit_amount : transaction.credit_amount;
+    const category = capitalize(type);
+
+    return `
+      <tr>
+        <td>${formatDate(transaction.date)}</td>
+        <td>${escapeHtml(transaction.description)}</td>
+        <td>${category}</td>
+        <td>${formatMoney(amount)}</td>
+        <td><span class="badge ${type}">${category}</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function loadIraUtilization() {
+  try {
+    const ira = await fetchJson(`${API_BASE}/ira`);
+    const utilizedPercent = Math.min(
+      ira.infrastructure_percent + ira.health_percent + ira.education_percent,
+      100
+    );
+
+    document.getElementById('iraProgress').textContent = `${formatPercent(utilizedPercent)}%`;
+    document.getElementById('iraRing').style.background =
+      `conic-gradient(var(--blue) 0% ${utilizedPercent}%, #e5e7eb ${utilizedPercent}% 100%)`;
+    document.getElementById('infrastructurePercent').textContent = `${formatPercent(ira.infrastructure_percent)}%`;
+    document.getElementById('healthPercent').textContent = `${formatPercent(ira.health_percent)}%`;
+    document.getElementById('educationPercent').textContent = `${formatPercent(ira.education_percent)}%`;
+  } catch (error) {
+    document.getElementById('iraProgress').textContent = 'N/A';
+    showDashboardError('IRA allocation is not available for the current month.');
+  }
+}
+
+async function loadMonthlyBreakdown(startDate, endDate) {
+  const [revenues, expenses] = await Promise.all([
+    fetchJson(`${API_BASE}/revenue?start_date=${startDate}&end_date=${endDate}`),
+    fetchJson(`${API_BASE}/expenses?start_date=${startDate}&end_date=${endDate}`)
+  ]);
+
+  const items = [
+    ...groupTotals(revenues, 'source_type').map(item => ({ label: formatLabel(item.label), amount: item.amount })),
+    ...groupTotals(expenses, 'category').map(item => ({ label: `${formatLabel(item.label)} Expense`, amount: item.amount }))
+  ].sort((a, b) => b.amount - a.amount).slice(0, 4);
+
+  const list = document.getElementById('monthlyBreakdown');
+  if (!items.length) {
+    list.innerHTML = '<div class="summary-item"><span>No monthly activity yet.</span><strong>PHP 0.00</strong></div>';
+    return;
+  }
+
+  list.innerHTML = items.map(item => `
+    <div class="summary-item">
+      <span>${escapeHtml(item.label)}</span>
+      <strong>${formatMoney(item.amount)}</strong>
+    </div>
+  `).join('');
+}
+
+async function fetchJson(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(await getResponseError(response, `Request failed: ${url}`));
+  return response.json();
+}
+
+async function getResponseError(response, fallback) {
+  const text = await response.text();
+  if (!text) return fallback;
+
+  try {
+    const error = JSON.parse(text);
+    if (Array.isArray(error.detail)) {
+      return `${fallback}: ${error.detail.map(item => item.msg || JSON.stringify(item)).join('; ')}`;
+    }
+    if (error.detail) return `${fallback}: ${error.detail}`;
+  } catch (_) {
+    return `${fallback}: ${text}`;
+  }
+
+  return fallback;
+}
+
+function getRecentMonths(today, count) {
+  const months = [];
+  for (let index = count - 1; index >= 0; index--) {
+    const date = new Date(today.getFullYear(), today.getMonth() - index, 1);
+    months.push({ month: date.getMonth() + 1, year: date.getFullYear() });
+  }
+  return months;
+}
+
+function getMonthRange(today) {
+  const start = new Date(today.getFullYear(), today.getMonth(), 1);
+  const end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  return {
+    start: toDateInputValue(start),
+    end: toDateInputValue(end)
+  };
+}
+
+function getBarHeight(value, largest) {
+  if (!value) return 6;
+  return Math.max(12, Math.round((value / largest) * 210));
+}
+
+function groupTotals(records, key) {
+  const totals = records.reduce((map, record) => {
+    const label = record[key] || 'other';
+    map[label] = (map[label] || 0) + Number(record.amount || 0);
+    return map;
+  }, {});
+
+  return Object.entries(totals).map(([label, amount]) => ({ label, amount }));
+}
+
+function formatMoney(value) {
+  return `PHP ${Number(value || 0).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`;
+}
+
+function formatDate(value) {
+  const [year, month, day] = String(value).split('-').map(Number);
+  const date = year && month && day ? new Date(year, month - 1, day) : new Date(value);
+  return date.toLocaleDateString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric'
+  });
+}
+
+function formatLabel(value) {
+  return String(value || 'Other')
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, letter => letter.toUpperCase());
+}
+
+function formatPercent(value) {
+  return Number(value || 0).toLocaleString('en-US', { maximumFractionDigits: 1 });
+}
+
+function capitalize(value) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function toDateInputValue(date) {
+  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return offsetDate.toISOString().slice(0, 10);
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  }[char]));
+}
+
+function showDashboardError(message) {
+  const errorDiv = document.getElementById('dashboardError');
+  errorDiv.textContent = message;
+  errorDiv.style.display = 'block';
+}
+</script>
 
 </body>
 </html>

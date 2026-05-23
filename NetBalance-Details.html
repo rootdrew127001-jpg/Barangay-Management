@@ -20,6 +20,17 @@
 
   <!-- YOUR CSS -->
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .details-error {
+      display: none;
+      margin-bottom: 16px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #ffebee;
+      color: #d32f2f;
+      font-size: 14px;
+    }
+  </style>
 
 </head>
 
@@ -85,23 +96,23 @@
               Dashboard
             </a>
 
-            <a href="#" class="dropdown-item">
+            <a href="ResidentManagement.html" class="dropdown-item">
               Resident Management
             </a>
 
-            <a href="#" class="dropdown-item">
+            <a href="FinancialManagementRevenue.html" class="dropdown-item">
               Financial Management
             </a>
 
-            <a href="#" class="dropdown-item">
+            <a href="Reports.html" class="dropdown-item">
               Reports
             </a>
 
-            <a href="#" class="dropdown-item">
+            <a href="Documents.html" class="dropdown-item">
               Documents
             </a>
 
-            <a href="#" class="dropdown-item">
+            <a href="UserManagement.html" class="dropdown-item">
               User Management
             </a>
 
@@ -181,11 +192,13 @@
 
         </div>
 
+        <div id="detailsError" class="details-error"></div>
+
         <!-- NET BALANCE -->
         <div class="net-balance-box">
 
           <span>Net Balance</span>
-          <h1>₱40,000.00</h1>
+          <h1 id="netBalance">Loading...</h1>
 
         </div>
 
@@ -201,7 +214,7 @@
 
             <div class="finance-content">
               <span>Total Revenue</span>
-              <h2>₱120,000</h2>
+              <h2 id="totalRevenue">Loading...</h2>
             </div>
 
           </div>
@@ -215,7 +228,7 @@
 
             <div class="finance-content">
               <span>Total Expenses</span>
-              <h2>₱80,000</h2>
+              <h2 id="totalExpenses">Loading...</h2>
             </div>
 
           </div>
@@ -238,7 +251,7 @@
         </div>
 
         <!-- DOWNLOAD BUTTON -->
-        <button class="download-btn">
+        <button class="download-btn" id="downloadSummaryButton">
 
           <i class="fa-solid fa-download"></i>
           Download Summary
@@ -254,11 +267,101 @@
         font-size: 13px;
         color: var(--text-light);
       ">
-        © 2026 Barangay Financial and Revenue
+        &copy; 2026 Barangay Financial and Revenue
       </footer>
     </main>
 
   </div>
+
+<script>
+const API_BASE = 'http://localhost:8000/api';
+let currentSummary = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('downloadSummaryButton').addEventListener('click', downloadSummary);
+  loadNetBalance();
+});
+
+async function loadNetBalance() {
+  clearError();
+
+  try {
+    currentSummary = await fetchJson(`${API_BASE}/reports/summary`);
+    document.getElementById('netBalance').textContent = formatMoney(currentSummary.net_balance);
+    document.getElementById('totalRevenue').textContent = formatMoney(currentSummary.total_revenue);
+    document.getElementById('totalExpenses').textContent = formatMoney(currentSummary.total_expenses);
+  } catch (error) {
+    showError(error.message);
+  }
+}
+
+function downloadSummary() {
+  if (!currentSummary) {
+    showError('Summary is still loading. Please try again.');
+    return;
+  }
+
+  const rows = [
+    ['Metric', 'Amount'],
+    ['Total Revenue', currentSummary.total_revenue],
+    ['Total Expenses', currentSummary.total_expenses],
+    ['Net Balance', currentSummary.net_balance]
+  ];
+  const content = rows.map(row => row.join(',')).join('\r\n');
+  const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = 'net-balance-summary.csv';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function fetchJson(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(await getResponseError(response, `Request failed: ${url}`));
+  return response.json();
+}
+
+async function getResponseError(response, fallback) {
+  const text = await response.text();
+  if (!text) return fallback;
+
+  try {
+    const error = JSON.parse(text);
+    if (Array.isArray(error.detail)) {
+      return `${fallback}: ${error.detail.map(item => item.msg || JSON.stringify(item)).join('; ')}`;
+    }
+    if (error.detail) return `${fallback}: ${error.detail}`;
+  } catch (_) {
+    return `${fallback}: ${text}`;
+  }
+
+  return fallback;
+}
+
+function formatMoney(value) {
+  return `PHP ${Number(value || 0).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`;
+}
+
+function showError(message) {
+  const errorDiv = document.getElementById('detailsError');
+  errorDiv.textContent = message;
+  errorDiv.style.display = 'block';
+}
+
+function clearError() {
+  const errorDiv = document.getElementById('detailsError');
+  errorDiv.textContent = '';
+  errorDiv.style.display = 'none';
+}
+</script>
 
 </body>
 

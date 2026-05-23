@@ -5,7 +5,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>Summary Income</title>
+<title>All Transactions</title>
 
 <!-- Google Font -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,6 +19,17 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 <!-- MAIN CSS -->
 <link rel="stylesheet" href="style.css">
+<style>
+.transactions-error {
+display: none;
+margin-bottom: 16px;
+padding: 10px 12px;
+border-radius: 8px;
+background: #ffebee;
+color: #d32f2f;
+font-size: 14px;
+}
+</style>
 
 </head>
 
@@ -44,7 +55,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 <nav class="nav-menu">
 
-<a href="#" class="nav-item">
+<a href="FinancialHome.html" class="nav-item">
 <i class="fa-solid fa-table-columns"></i>
 Dashboard
 </a>
@@ -80,23 +91,27 @@ Financial
 
 <div class="dropdown-menu">
 
-<a href="financialhome.html" class="dropdown-item active">
+<a href="FinancialHome.html" class="dropdown-item active">
 Dashboard
 </a>
 
-<a href="summary_income.html" class="dropdown-item">
+<a href="ResidentManagement.html" class="dropdown-item">
 Resident Management
 </a>
 
-<a href="#" class="dropdown-item">
+<a href="FinancialManagementRevenue.html" class="dropdown-item">
+Financial Management
+</a>
+
+<a href="Reports.html" class="dropdown-item">
 Reports
 </a>
 
-<a href="#" class="dropdown-item">
+<a href="Documents.html" class="dropdown-item">
 Documents
 </a>
 
-<a href="#" class="dropdown-item">
+<a href="UserManagement.html" class="dropdown-item">
 User Management
 </a>
 
@@ -149,7 +164,7 @@ Logout
 <div class="topbar-right">
 
 <div class="breadcrumb">
-Financial / Summary Income
+Financial / All Transactions
 </div>
 
 <button class="icon-btn">
@@ -190,20 +205,23 @@ Latest revenue and expenses records
 type="text"
 placeholder="Search..."
 class="search-input"
+id="searchInput"
 />
 
 </div>
 
 <!-- FILTER -->
-<select class="month-select">
+<select class="month-select" id="typeFilter">
 
-<option>All Types</option>
-<option>Revenue</option>
-<option>Expense</option>
+<option value="all">All Types</option>
+<option value="revenue">Revenue</option>
+<option value="expense">Expense</option>
 
 </select>
 
 </div>
+
+<div id="transactionsError" class="transactions-error"></div>
 
 <!-- TABLE -->
 <div class="table-section">
@@ -223,78 +241,10 @@ class="search-input"
 
 </thead>
 
-<tbody>
+<tbody id="transactionsBody">
 
 <tr>
-
-<td>Aug 25, 2025</td>
-
-<td>Community Tax Collection</td>
-
-<td>
-<span class="badge revenue">
-Revenue
-</span>
-</td>
-
-<td class="income-amount">
-₱15,000.00
-</td>
-
-</tr>
-
-<tr>
-
-<td>Aug 23, 2025</td>
-
-<td>Office Supplies Purchase</td>
-
-<td>
-<span class="badge expense">
-Expense
-</span>
-</td>
-
-<td class="expense-amount">
-₱8,500.00
-</td>
-
-</tr>
-
-<tr>
-
-<td>Aug 18, 2025</td>
-
-<td>Street Light Maintenance</td>
-
-<td>
-<span class="badge expense">
-Expense
-</span>
-</td>
-
-<td class="expense-amount">
-₱12,000.00
-</td>
-
-</tr>
-
-<tr>
-
-<td>Aug 15, 2025</td>
-
-<td>IRA Fund Release</td>
-
-<td>
-<span class="badge revenue">
-Revenue
-</span>
-</td>
-
-<td class="income-amount">
-₱50,000.00
-</td>
-
+<td colspan="4">Loading transactions...</td>
 </tr>
 
 </tbody>
@@ -306,9 +256,9 @@ Revenue
 <!-- BUTTON -->
 <div class="transaction-btn-wrapper">
 
-<button class="download-btn">
+<button class="download-btn" id="exportButton">
 
-View All Transactions
+Download CSV
 
 </button>
 
@@ -319,13 +269,166 @@ View All Transactions
 <!-- FOOTER -->
 <footer class="footer">
 
-© 2026 Barangay Financial and Revenue
+&copy; 2026 Barangay Financial and Revenue
 
 </footer>
 
 </main>
 
 </div>
+
+<script>
+const API_BASE = 'http://localhost:8000/api';
+let allTransactions = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+document.getElementById('searchInput').addEventListener('input', renderTransactions);
+document.getElementById('typeFilter').addEventListener('change', renderTransactions);
+document.getElementById('exportButton').addEventListener('click', downloadTransactionsCsv);
+loadTransactions();
+});
+
+async function loadTransactions() {
+clearError();
+
+try {
+allTransactions = await fetchJson(`${API_BASE}/transactions?limit=1000`);
+allTransactions.sort((a, b) => new Date(b.date) - new Date(a.date) || b.id - a.id);
+renderTransactions();
+} catch (error) {
+showError(error.message);
+document.getElementById('transactionsBody').innerHTML = '<tr><td colspan="4">Unable to load transactions.</td></tr>';
+}
+}
+
+function renderTransactions() {
+const search = document.getElementById('searchInput').value.trim().toLowerCase();
+const type = document.getElementById('typeFilter').value;
+const tbody = document.getElementById('transactionsBody');
+
+const filtered = allTransactions.filter(transaction => {
+const matchesType = type === 'all' || transaction.transaction_type === type;
+const matchesSearch = !search ||
+transaction.description.toLowerCase().includes(search) ||
+transaction.transaction_type.toLowerCase().includes(search) ||
+formatMoney(getTransactionAmount(transaction)).toLowerCase().includes(search);
+
+return matchesType && matchesSearch;
+});
+
+if (!filtered.length) {
+tbody.innerHTML = '<tr><td colspan="4">No transactions found.</td></tr>';
+return;
+}
+
+tbody.innerHTML = filtered.map(transaction => {
+const typeClass = transaction.transaction_type === 'expense' ? 'expense' : 'revenue';
+const typeLabel = capitalize(typeClass);
+const amountClass = typeClass === 'expense' ? 'expense-amount' : 'income-amount';
+
+return `
+<tr>
+<td>${formatDate(transaction.date)}</td>
+<td>${escapeHtml(transaction.description)}</td>
+<td><span class="badge ${typeClass}">${typeLabel}</span></td>
+<td class="${amountClass}">${formatMoney(getTransactionAmount(transaction))}</td>
+</tr>
+`;
+}).join('');
+}
+
+async function downloadTransactionsCsv() {
+clearError();
+
+try {
+const exportData = await fetchJson(`${API_BASE}/transactions/export-csv`);
+const blob = new Blob([exportData.content], { type: 'text/csv;charset=utf-8;' });
+const url = URL.createObjectURL(blob);
+const link = document.createElement('a');
+link.href = url;
+link.download = exportData.filename || 'transactions.csv';
+document.body.appendChild(link);
+link.click();
+link.remove();
+URL.revokeObjectURL(url);
+} catch (error) {
+showError(error.message);
+}
+}
+
+async function fetchJson(url) {
+const response = await fetch(url);
+if (!response.ok) throw new Error(await getResponseError(response, `Request failed: ${url}`));
+return response.json();
+}
+
+async function getResponseError(response, fallback) {
+const text = await response.text();
+if (!text) return fallback;
+
+try {
+const error = JSON.parse(text);
+if (Array.isArray(error.detail)) {
+return `${fallback}: ${error.detail.map(item => item.msg || JSON.stringify(item)).join('; ')}`;
+}
+if (error.detail) return `${fallback}: ${error.detail}`;
+} catch (_) {
+return `${fallback}: ${text}`;
+}
+
+return fallback;
+}
+
+function getTransactionAmount(transaction) {
+return transaction.transaction_type === 'expense'
+? Number(transaction.debit_amount || 0)
+: Number(transaction.credit_amount || 0);
+}
+
+function formatMoney(value) {
+return `PHP ${Number(value || 0).toLocaleString('en-US', {
+minimumFractionDigits: 2,
+maximumFractionDigits: 2
+})}`;
+}
+
+function formatDate(value) {
+const [year, month, day] = String(value).split('-').map(Number);
+const date = year && month && day ? new Date(year, month - 1, day) : new Date(value);
+
+return date.toLocaleDateString('en-US', {
+month: 'short',
+day: 'numeric',
+year: 'numeric'
+});
+}
+
+function capitalize(value) {
+return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function escapeHtml(value) {
+return String(value ?? '').replace(/[&<>"']/g, char => ({
+'&': '&amp;',
+'<': '&lt;',
+'>': '&gt;',
+'"': '&quot;',
+"'": '&#039;'
+}[char]));
+}
+
+function showError(message) {
+const errorDiv = document.getElementById('transactionsError');
+errorDiv.textContent = message;
+errorDiv.style.display = 'block';
+}
+
+function clearError() {
+const errorDiv = document.getElementById('transactionsError');
+errorDiv.textContent = '';
+errorDiv.style.display = 'none';
+}
+</script>
 
 </body>
 </html>

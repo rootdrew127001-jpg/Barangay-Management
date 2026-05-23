@@ -20,6 +20,17 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 <!-- MAIN CSS -->
 <link rel="stylesheet" href="style.css">
+<style>
+.details-error {
+display: none;
+margin-bottom: 16px;
+padding: 10px 12px;
+border-radius: 8px;
+background: #ffebee;
+color: #d32f2f;
+font-size: 14px;
+}
+</style>
 
 </head>
 
@@ -81,23 +92,23 @@ Financial
 
 <div class="dropdown-menu">
 
-<a href="financialhome.html" class="dropdown-item active">
+<a href="FinancialHome.html" class="dropdown-item active">
 Dashboard
 </a>
 
-<a href="monthly_report.html" class="dropdown-item">
+<a href="FinancialManagementRevenue.html" class="dropdown-item">
 Financial Management
 </a>
 
-<a href="#" class="dropdown-item">
+<a href="Reports.html" class="dropdown-item">
 Reports
 </a>
 
-<a href="#" class="dropdown-item">
+<a href="Documents.html" class="dropdown-item">
 Documents
 </a>
 
-<a href="#" class="dropdown-item">
+<a href="UserManagement.html" class="dropdown-item">
 User Management
 </a>
 
@@ -184,17 +195,15 @@ Collection and disbursements summary
 
 </div>
 
-<select class="month-select">
-
-<option>May 2026</option>
-<option>April 2025</option>
-<option>March 2025</option>
+<select class="month-select" id="monthSelect">
 
 </select>
 
 </div>
 
 </div>
+
+<div id="detailsError" class="details-error"></div>
 
 <!-- TOP CARDS -->
 <div class="financial-cards">
@@ -210,7 +219,7 @@ Collection and disbursements summary
 
 <span>Total Collections</span>
 
-<h2>₱25,000.00</h2>
+<h2 id="totalCollections">Loading...</h2>
 
 </div>
 
@@ -227,7 +236,7 @@ Collection and disbursements summary
 
 <span>Total Disbursements</span>
 
-<h2>₱20,500.00</h2>
+<h2 id="totalDisbursements">Loading...</h2>
 
 </div>
 
@@ -242,63 +251,14 @@ Collection and disbursements summary
 Breakdown
 </h3>
 
-<div class="summary-list">
+<div class="summary-list" id="breakdownList">
 
-<!-- ITEM -->
 <div class="summary-item">
-
 <div class="summary-left-item">
-
-<span class="breakdown-dot green-dot"></span>
-
-<span>
-Tax Collections
-</span>
-
-</div>
-
-<strong class="income-text">
-₱15,000
-</strong>
-
-</div>
-
-<!-- ITEM -->
-<div class="summary-item">
-
-<div class="summary-left-item">
-
-<span class="breakdown-dot red-dot"></span>
-
-<span>
-Operations
-</span>
-
-</div>
-
-<strong class="expense-text">
-₱12,000
-</strong>
-
-</div>
-
-<!-- ITEM -->
-<div class="summary-item">
-
-<div class="summary-left-item">
-
 <span class="breakdown-dot blue-dot"></span>
-
-<span>
-Projects & Supplies
-</span>
-
+<span>Loading breakdown...</span>
 </div>
-
-<strong class="income-text">
-₱8,500
-</strong>
-
+<strong></strong>
 </div>
 
 </div>
@@ -306,7 +266,7 @@ Projects & Supplies
 </div>
 
 <!-- BUTTON -->
-<button class="download-btn">
+<button class="download-btn" id="downloadButton">
 
 <i class="fa-solid fa-download"></i>
 
@@ -319,13 +279,233 @@ Download Report
 <!-- FOOTER -->
 <footer class="footer">
 
-© 2026 Barangay Financial and Revenue
+&copy; 2026 Barangay Financial and Revenue
 
 </footer>
 
 </main>
 
 </div>
+
+<script>
+const API_BASE = 'http://localhost:8000/api';
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+let currentReport = null;
+let currentBreakdown = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+populateMonthSelect();
+document.getElementById('monthSelect').addEventListener('change', loadMonthlyReport);
+document.getElementById('downloadButton').addEventListener('click', downloadReport);
+loadMonthlyReport();
+});
+
+function populateMonthSelect() {
+const select = document.getElementById('monthSelect');
+const today = new Date();
+const options = [];
+
+for (let index = 0; index < 12; index++) {
+const date = new Date(today.getFullYear(), today.getMonth() - index, 1);
+const month = date.getMonth() + 1;
+const year = date.getFullYear();
+options.push(`<option value="${year}-${String(month).padStart(2, '0')}">${MONTH_NAMES[month - 1]} ${year}</option>`);
+}
+
+select.innerHTML = options.join('');
+}
+
+async function loadMonthlyReport() {
+clearError();
+
+try {
+const { month, year, startDate, endDate } = getSelectedMonth();
+const [report, revenues, expenses] = await Promise.all([
+fetchJson(`${API_BASE}/reports/monthly?month=${month}&year=${year}`),
+fetchJson(`${API_BASE}/revenue?start_date=${startDate}&end_date=${endDate}`),
+fetchJson(`${API_BASE}/expenses?start_date=${startDate}&end_date=${endDate}`)
+]);
+
+currentReport = report;
+currentBreakdown = buildBreakdown(revenues, expenses);
+
+document.getElementById('totalCollections').textContent = formatMoney(report.total_revenue);
+document.getElementById('totalDisbursements').textContent = formatMoney(report.total_expenses);
+renderBreakdown(currentBreakdown);
+} catch (error) {
+showError(error.message);
+}
+}
+
+function buildBreakdown(revenues, expenses) {
+const revenueItems = groupTotals(revenues, 'source_type').map(item => ({
+label: formatLabel(item.label),
+amount: item.amount,
+type: 'income'
+}));
+const expenseItems = groupTotals(expenses, 'category').map(item => ({
+label: `${formatLabel(item.label)} Expense`,
+amount: item.amount,
+type: 'expense'
+}));
+
+return [...revenueItems, ...expenseItems].sort((a, b) => b.amount - a.amount);
+}
+
+function renderBreakdown(items) {
+const list = document.getElementById('breakdownList');
+
+if (!items.length) {
+list.innerHTML = `
+<div class="summary-item">
+<div class="summary-left-item"><span class="breakdown-dot blue-dot"></span><span>No monthly activity yet.</span></div>
+<strong>PHP 0.00</strong>
+</div>
+`;
+return;
+}
+
+list.innerHTML = items.map(item => {
+const dotClass = item.type === 'expense' ? 'red-dot' : 'green-dot';
+const textClass = item.type === 'expense' ? 'expense-text' : 'income-text';
+
+return `
+<div class="summary-item">
+<div class="summary-left-item">
+<span class="breakdown-dot ${dotClass}"></span>
+<span>${escapeHtml(item.label)}</span>
+</div>
+<strong class="${textClass}">${formatMoney(item.amount)}</strong>
+</div>
+`;
+}).join('');
+}
+
+function downloadReport() {
+if (!currentReport) {
+showError('Report is still loading. Please try again.');
+return;
+}
+
+const selectedText = document.getElementById('monthSelect').selectedOptions[0].textContent;
+const rows = [
+['Monthly Report', selectedText],
+['Total Collections', currentReport.total_revenue],
+['Total Disbursements', currentReport.total_expenses],
+['Net Balance', currentReport.net_balance],
+[],
+['Breakdown', 'Type', 'Amount'],
+...currentBreakdown.map(item => [item.label, item.type, item.amount])
+];
+
+downloadCsv(`monthly-report-${document.getElementById('monthSelect').value}.csv`, rows);
+}
+
+function getSelectedMonth() {
+const [year, month] = document.getElementById('monthSelect').value.split('-').map(Number);
+const start = new Date(year, month - 1, 1);
+const end = new Date(year, month, 0);
+
+return {
+month,
+year,
+startDate: toDateInputValue(start),
+endDate: toDateInputValue(end)
+};
+}
+
+function groupTotals(records, key) {
+const totals = records.reduce((map, record) => {
+const label = record[key] || 'other';
+map[label] = (map[label] || 0) + Number(record.amount || 0);
+return map;
+}, {});
+
+return Object.entries(totals).map(([label, amount]) => ({ label, amount }));
+}
+
+async function fetchJson(url) {
+const response = await fetch(url);
+if (!response.ok) throw new Error(await getResponseError(response, `Request failed: ${url}`));
+return response.json();
+}
+
+async function getResponseError(response, fallback) {
+const text = await response.text();
+if (!text) return fallback;
+
+try {
+const error = JSON.parse(text);
+if (Array.isArray(error.detail)) {
+return `${fallback}: ${error.detail.map(item => item.msg || JSON.stringify(item)).join('; ')}`;
+}
+if (error.detail) return `${fallback}: ${error.detail}`;
+} catch (_) {
+return `${fallback}: ${text}`;
+}
+
+return fallback;
+}
+
+function formatMoney(value) {
+return `PHP ${Number(value || 0).toLocaleString('en-US', {
+minimumFractionDigits: 2,
+maximumFractionDigits: 2
+})}`;
+}
+
+function formatLabel(value) {
+return String(value || 'Other')
+.replace(/_/g, ' ')
+.replace(/\b\w/g, letter => letter.toUpperCase());
+}
+
+function toDateInputValue(date) {
+const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+return offsetDate.toISOString().slice(0, 10);
+}
+
+function downloadCsv(filename, rows) {
+const content = rows.map(row => row.map(escapeCsv).join(',')).join('\r\n');
+const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+const url = URL.createObjectURL(blob);
+const link = document.createElement('a');
+
+link.href = url;
+link.download = filename;
+document.body.appendChild(link);
+link.click();
+link.remove();
+URL.revokeObjectURL(url);
+}
+
+function escapeCsv(value) {
+const text = String(value ?? '');
+return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+}
+
+function escapeHtml(value) {
+return String(value ?? '').replace(/[&<>"']/g, char => ({
+'&': '&amp;',
+'<': '&lt;',
+'>': '&gt;',
+'"': '&quot;',
+"'": '&#039;'
+}[char]));
+}
+
+function showError(message) {
+const errorDiv = document.getElementById('detailsError');
+errorDiv.textContent = message;
+errorDiv.style.display = 'block';
+}
+
+function clearError() {
+const errorDiv = document.getElementById('detailsError');
+errorDiv.textContent = '';
+errorDiv.style.display = 'none';
+}
+</script>
 
 </body>
 </html>

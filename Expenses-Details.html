@@ -13,6 +13,17 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .details-error {
+      display: none;
+      margin-bottom: 16px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #ffebee;
+      color: #d32f2f;
+      font-size: 14px;
+    }
+  </style>
 </head>
 
 <body>
@@ -68,27 +79,27 @@
 
           <div class="dropdown-menu">
 
-            <a href="financialhome.html" class="dropdown-item active">
+            <a href="FinancialHome.html" class="dropdown-item active">
               Dashboard
             </a>
 
-            <a href="#" class="dropdown-item">
+            <a href="ResidentManagement.html" class="dropdown-item">
               Resident Management
             </a>
 
-            <a href="#" class="dropdown-item">
+            <a href="FinancialManagementRevenue.html" class="dropdown-item">
               Financial Management
             </a>
 
-            <a href="#" class="dropdown-item">
+            <a href="Reports.html" class="dropdown-item">
               Reports
             </a>
 
-            <a href="#" class="dropdown-item">
+            <a href="Documents.html" class="dropdown-item">
               Documents
             </a>
 
-            <a href="#" class="dropdown-item">
+            <a href="UserManagement.html" class="dropdown-item">
               User Management
             </a>
 
@@ -161,12 +172,14 @@
           <p>Detailed breakdown of all Expenses</p>
         </div>
 
-        <select class="month-select">
-          <option>This Month</option>
-          <option>Last Month</option>
-          <option>This Year</option>
+        <select class="month-select" id="periodSelect">
+          <option value="this_month">This Month</option>
+          <option value="last_month">Last Month</option>
+          <option value="this_year">This Year</option>
         </select>
       </div>
+
+      <div id="detailsError" class="details-error"></div>
 
       <div class="revenue-summary">
 
@@ -178,53 +191,25 @@
 
           <div class="summary-text">
             <span>Total Expenses</span>
-            <h1 style="color:#ef4444;">₱80,000.00</h1>
+            <h1 id="totalExpenses" style="color:#ef4444;">Loading...</h1>
           </div>
 
         </div>
 
-        <div class="growth" style="background:#fee2e2;color:#ef4444;">
-          +5.2%
+        <div class="growth" id="recordCount" style="background:#fee2e2;color:#ef4444;">
+          0 records
         </div>
 
       </div>
 
       <h3 class="section-title">Monthly Expenses</h3>
 
-      <div class="chart">
+      <div class="chart" id="monthlyExpensesChart">
 
         <div class="chart-row">
-          <span>Jan</span>
+          <span>...</span>
           <div class="bar-container">
-            <div class="bar" style="width: 90%; background:#ef4444;"></div>
-          </div>
-        </div>
-
-        <div class="chart-row">
-          <span>Feb</span>
-          <div class="bar-container">
-            <div class="bar" style="width: 70%; background:#ef4444;"></div>
-          </div>
-        </div>
-
-        <div class="chart-row">
-          <span>Mar</span>
-          <div class="bar-container">
-            <div class="bar" style="width: 50%; background:#ef4444;"></div>
-          </div>
-        </div>
-
-        <div class="chart-row">
-          <span>Apr</span>
-          <div class="bar-container">
-            <div class="bar" style="width: 40%; background:#ef4444;"></div>
-          </div>
-        </div>
-
-        <div class="chart-row">
-          <span>May</span>
-          <div class="bar-container">
-            <div class="bar" style="width: 30%; background:#ef4444;"></div>
+            <div class="bar" style="width: 0%; background:#ef4444;"></div>
           </div>
         </div>
 
@@ -243,24 +228,10 @@
             </tr>
           </thead>
 
-          <tbody>
+          <tbody id="expensesRecordsBody">
 
             <tr>
-              <td>Aug 25, 2025</td>
-              <td>Office Supplies</td>
-              <td class="amount" style="color:#ef4444;">₱8,500</td>
-            </tr>
-
-            <tr>
-              <td>Aug 20, 2025</td>
-              <td>Maintenance</td>
-              <td class="amount" style="color:#ef4444;">₱12,000</td>
-            </tr>
-
-            <tr>
-              <td>Aug 15, 2025</td>
-              <td>Project Materials</td>
-              <td class="amount" style="color:#ef4444;">₱25,000</td>
+              <td colspan="3">Loading expenses records...</td>
             </tr>
 
           </tbody>
@@ -269,7 +240,7 @@
 
       </div>
 
-      <button class="add-btn" style="color:#ef4444;background:#fee2e2;">
+      <button class="add-btn" onclick="window.location.href='FinancialManagementExpenses.html'" style="color:#ef4444;background:#fee2e2;">
         + Add Expenses
       </button>
 
@@ -283,11 +254,183 @@
         font-size: 13px;
         color: var(--text-light);
       ">
-        © 2026 Barangay Financial and Revenue
+        &copy; 2026 Barangay Financial and Revenue
       </footer>
   </main>
 
 </div>
+
+<script>
+const API_BASE = 'http://localhost:8000/api';
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('periodSelect').addEventListener('change', loadExpenseDetails);
+  loadExpenseDetails();
+  loadMonthlyChart(new Date().getFullYear());
+});
+
+async function loadExpenseDetails() {
+  clearError();
+
+  try {
+    const period = getSelectedPeriod();
+    const [summary, expenses] = await Promise.all([
+      fetchJson(period.reportUrl),
+      fetchJson(`${API_BASE}/expenses?start_date=${period.startDate}&end_date=${period.endDate}`)
+    ]);
+
+    document.getElementById('totalExpenses').textContent = formatMoney(summary.total_expenses);
+    document.getElementById('recordCount').textContent = `${expenses.length} ${expenses.length === 1 ? 'record' : 'records'}`;
+    renderExpenseRows(expenses);
+  } catch (error) {
+    showError(error.message);
+  }
+}
+
+async function loadMonthlyChart(year) {
+  try {
+    const reports = await Promise.all(
+      MONTH_NAMES.map((_, index) => fetchJson(`${API_BASE}/reports/monthly?month=${index + 1}&year=${year}`))
+    );
+    const largest = Math.max(...reports.map(report => report.total_expenses), 1);
+    const chart = document.getElementById('monthlyExpensesChart');
+
+    chart.innerHTML = reports.map((report, index) => {
+      const percent = report.total_expenses ? Math.max(2, Math.round((report.total_expenses / largest) * 100)) : 0;
+      return `
+        <div class="chart-row" title="${formatMoney(report.total_expenses)}">
+          <span>${MONTH_NAMES[index]}</span>
+          <div class="bar-container">
+            <div class="bar" style="width: ${percent}%; background:#ef4444;"></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (error) {
+    showError(error.message);
+  }
+}
+
+function renderExpenseRows(expenses) {
+  const tbody = document.getElementById('expensesRecordsBody');
+  const sorted = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date) || b.id - a.id);
+
+  if (!sorted.length) {
+    tbody.innerHTML = '<tr><td colspan="3">No expenses records found.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = sorted.map(expense => `
+    <tr>
+      <td>${formatDate(expense.date)}</td>
+      <td>${escapeHtml(expense.category)}</td>
+      <td class="amount" style="color:#ef4444;">${formatMoney(expense.amount)}</td>
+    </tr>
+  `).join('');
+}
+
+function getSelectedPeriod() {
+  const selected = document.getElementById('periodSelect').value;
+  const today = new Date();
+
+  if (selected === 'last_month') {
+    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    return buildMonthPeriod(lastMonth);
+  }
+
+  if (selected === 'this_year') {
+    const year = today.getFullYear();
+    return {
+      startDate: `${year}-01-01`,
+      endDate: `${year}-12-31`,
+      reportUrl: `${API_BASE}/reports/annual?year=${year}`
+    };
+  }
+
+  return buildMonthPeriod(today);
+}
+
+function buildMonthPeriod(date) {
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  const start = new Date(year, month - 1, 1);
+  const end = new Date(year, month, 0);
+
+  return {
+    startDate: toDateInputValue(start),
+    endDate: toDateInputValue(end),
+    reportUrl: `${API_BASE}/reports/monthly?month=${month}&year=${year}`
+  };
+}
+
+async function fetchJson(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(await getResponseError(response, `Request failed: ${url}`));
+  return response.json();
+}
+
+async function getResponseError(response, fallback) {
+  const text = await response.text();
+  if (!text) return fallback;
+
+  try {
+    const error = JSON.parse(text);
+    if (Array.isArray(error.detail)) {
+      return `${fallback}: ${error.detail.map(item => item.msg || JSON.stringify(item)).join('; ')}`;
+    }
+    if (error.detail) return `${fallback}: ${error.detail}`;
+  } catch (_) {
+    return `${fallback}: ${text}`;
+  }
+
+  return fallback;
+}
+
+function formatMoney(value) {
+  return `PHP ${Number(value || 0).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`;
+}
+
+function formatDate(value) {
+  const [year, month, day] = String(value).split('-').map(Number);
+  const date = year && month && day ? new Date(year, month - 1, day) : new Date(value);
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+}
+
+function toDateInputValue(date) {
+  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return offsetDate.toISOString().slice(0, 10);
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  }[char]));
+}
+
+function showError(message) {
+  const errorDiv = document.getElementById('detailsError');
+  errorDiv.textContent = message;
+  errorDiv.style.display = 'block';
+}
+
+function clearError() {
+  const errorDiv = document.getElementById('detailsError');
+  errorDiv.textContent = '';
+  errorDiv.style.display = 'none';
+}
+</script>
 
 </body>
 </html>
